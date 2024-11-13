@@ -359,6 +359,8 @@
       <SeparatorMenuItem/>
       <MenuItem text="Online reactivity" onAction="#runModule"
         userData="io.github.mzmine.modules.dataprocessing.id_online_reactivity.OnlineLcReactivityModule"/>
+      <MenuItem text="Post Column Reaction" onAction="#runModule"
+        userData="io.github.mzmine.modules.dataprocessing.id_postcolumnreaction.PostColumnReactionModule"/>
       <MenuItem text="Annotate Isomers" onAction="#runModule"
         userData="io.github.mzmine.modules.dataprocessing.filter_interestingfeaturefinder.AnnotateIsomersModule"/>
       <SeparatorMenuItem/>

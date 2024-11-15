@@ -20,7 +20,6 @@ import io.github.mzmine.util.FeatureListRowSorter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +33,6 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
 
   private final int totalRows;
 
-  private AtomicInteger processedRows = new AtomicInteger(0);
   private MZmineProject project;
   private ParameterSet parameters;
   private RawDataFilesSelection unreactedSelection;
@@ -44,7 +42,6 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
       @NotNull Instant moduleCallDate) {
     super(null, moduleCallDate, parameters, OnlineLcReactivityModule.class);
 
-    this.project = project;
     this.parameters = parameters;
     this.unreactedSelection = parameters.getParameter(
         PostColumnReactionParameters.unreactedRawDataFiles).getValue();

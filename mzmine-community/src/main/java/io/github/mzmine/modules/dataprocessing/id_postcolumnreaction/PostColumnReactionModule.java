@@ -36,9 +36,9 @@ public class PostColumnReactionModule implements MZmineProcessingModule {
   public @NotNull ExitCode runModule(@NotNull MZmineProject project,
       @NotNull ParameterSet parameters, @NotNull Collection<Task> tasks,
       @NotNull Instant moduleCallDate) {
-    for (ModularFeatureList flist : parameters.getValue(PostColumnReactionParameters.flists)
+    for (ModularFeatureList flist : parameters.getValue(PostColumnReactionParameters.flist)
         .getMatchingFeatureLists()) {
-      tasks.add(new PostColumnReactionTask(parameters, flist, moduleCallDate));
+      tasks.add(new PostColumnReactionTask(parameters, moduleCallDate));
     }
     return ExitCode.OK;
   }

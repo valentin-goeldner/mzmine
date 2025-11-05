@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.openscience.cdk.formula.MolecularFormulaGenerator;
 import org.openscience.cdk.formula.MolecularFormulaRange;
 import org.openscience.cdk.interfaces.IChemObjectBuilder;
@@ -73,8 +74,9 @@ public class FormulaPredictionFeatureListTask extends AbstractTask {
   private final Double minIsotopeScore;
   private final Double isotopeNoiseLevel;
   private final MZTolerance isotopeMZTolerance;
+  private final List<FeatureListRow> rows;
   private final IonizationType ionType;
-  private final ModularFeatureList featureList;
+  private final @Nullable ModularFeatureList featureList;
   private final boolean checkIsotopes;
   private final boolean checkMSMS;
   private final boolean checkRatios;
@@ -103,11 +105,18 @@ public class FormulaPredictionFeatureListTask extends AbstractTask {
    * @param parameters
    * @param featureList
    */
-  FormulaPredictionFeatureListTask(ModularFeatureList featureList, ParameterSet parameters,
+  public FormulaPredictionFeatureListTask(ModularFeatureList featureList, ParameterSet parameters,
+      @NotNull Instant moduleCallDate) {
+    this(featureList, featureList.getRows(), parameters, moduleCallDate);
+  }
+
+  public FormulaPredictionFeatureListTask(@Nullable ModularFeatureList featureList,
+      @NotNull List<FeatureListRow> rows, ParameterSet parameters,
       @NotNull Instant moduleCallDate) {
     super(null, moduleCallDate); // no new data stored -> null
 
     this.featureList = featureList;
+    this.rows = rows;
     ionType = parameters.getParameter(FormulaPredictionFeatureListParameters.ionization).getValue();
     mzTolerance = parameters.getParameter(FormulaPredictionFeatureListParameters.mzTolerance)
         .getValue();
@@ -197,12 +206,14 @@ public class FormulaPredictionFeatureListTask extends AbstractTask {
 
     setStatus(TaskStatus.PROCESSING);
 
-    totalRows = featureList.getNumberOfRows();
+    totalRows = rows.size();
 
-    featureList.addRowType(DataTypes.get(
-        io.github.mzmine.datamodel.features.types.annotations.formula.FormulaListType.class));
+    if (featureList != null) {
+      featureList.addRowType(DataTypes.get(
+          io.github.mzmine.datamodel.features.types.annotations.formula.FormulaListType.class));
+    }
 
-    for (FeatureListRow row : featureList.getRows()) {
+    for (FeatureListRow row : rows) {
 
       if (row.getPeakIdentities().size() > 0) {
         continue;
@@ -262,9 +273,11 @@ public class FormulaPredictionFeatureListTask extends AbstractTask {
       return;
     }
 
-    featureList.getAppliedMethods().add(
-        new SimpleFeatureListAppliedMethod(FormulaPredictionFeatureListModule.class, parameters,
-            getModuleCallDate()));
+    if (featureList != null) {
+      featureList.getAppliedMethods().add(
+          new SimpleFeatureListAppliedMethod(FormulaPredictionFeatureListModule.class, parameters,
+              getModuleCallDate()));
+    }
 
     logger.finest("Finished formula search for all the features");
 

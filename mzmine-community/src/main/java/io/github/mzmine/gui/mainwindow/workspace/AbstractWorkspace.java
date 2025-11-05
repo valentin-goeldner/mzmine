@@ -60,6 +60,7 @@ import io.github.mzmine.modules.dataprocessing.group_metacorrelate.export.Export
 import io.github.mzmine.modules.dataprocessing.group_spectral_networking.MainSpectralNetworkingModule;
 import io.github.mzmine.modules.dataprocessing.id_biotransformer.BioTransformerModule;
 import io.github.mzmine.modules.dataprocessing.id_ecmscalcpotential.CalcEcmsPotentialModule;
+import io.github.mzmine.modules.dataprocessing.id_ecreaction.ECReactionModule;
 import io.github.mzmine.modules.dataprocessing.id_formulapredictionfeaturelist.FormulaPredictionFeatureListModule;
 import io.github.mzmine.modules.dataprocessing.id_ion_identity_networking.addionannotations.AddIonNetworkingModule;
 import io.github.mzmine.modules.dataprocessing.id_ion_identity_networking.checkmsms.IonNetworkMSMSCheckModule;
@@ -74,6 +75,7 @@ import io.github.mzmine.modules.dataprocessing.id_localcsvsearch.LocalCSVDatabas
 import io.github.mzmine.modules.dataprocessing.id_ms2search.Ms2SearchModule;
 import io.github.mzmine.modules.dataprocessing.id_nist.NistMsSearchModule;
 import io.github.mzmine.modules.dataprocessing.id_online_reactivity.OnlineLcReactivityModule;
+import io.github.mzmine.modules.dataprocessing.id_postcolumnreaction.PostColumnReactionModule;
 import io.github.mzmine.modules.dataprocessing.id_spectral_library_match.SpectralLibrarySearchModule;
 import io.github.mzmine.modules.io.export_ccsbase.CcsBaseExportModule;
 import io.github.mzmine.modules.io.export_compoundAnnotations_csv.CompoundAnnotationsCSVExportModule;
@@ -304,7 +306,8 @@ public abstract class AbstractWorkspace implements Workspace {
     addModuleMenuItems(menu, "Search spectra", SpectralLibrarySearchModule.class,
         LipidAnnotationModule.class, NistMsSearchModule.class,
         FormulaPredictionFeatureListModule.class, Ms2SearchModule.class);
-    addModuleMenuItems(menu, "EC-MS workflow", CalcEcmsPotentialModule.class);
+    addModuleMenuItems(menu, "EC-MS workflow", CalcEcmsPotentialModule.class,
+        ECReactionModule.class, PostColumnReactionModule.class);
     menu.getItems().add(new SeparatorMenuItem());
     addModuleMenuItems(menu, ClearFeatureAnnotationsModule.class);
     return menu;

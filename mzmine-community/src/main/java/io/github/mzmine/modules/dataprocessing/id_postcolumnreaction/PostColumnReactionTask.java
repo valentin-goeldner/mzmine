@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2025 The mzmine Development Team
+ * Copyright (c) 2004-2026 The mzmine Development Team
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -54,8 +54,6 @@ import io.github.mzmine.modules.dataprocessing.id_formulaprediction.restrictions
 import io.github.mzmine.modules.dataprocessing.id_formulaprediction.restrictions.rdbe.RDBERestrictionParameters;
 import io.github.mzmine.modules.dataprocessing.id_formulapredictionfeaturelist.FormulaPredictionFeatureListParameters;
 import io.github.mzmine.modules.dataprocessing.id_formulapredictionfeaturelist.FormulaPredictionFeatureListTask;
-import io.github.mzmine.modules.dataprocessing.id_online_reactivity.OnlineLcReactivityModule;
-import io.github.mzmine.modules.dataprocessing.id_online_reactivity.OnlineLcReactivityTask;
 import io.github.mzmine.modules.tools.isotopepatternscore.IsotopePatternScoreParameters;
 import io.github.mzmine.modules.tools.msmsscore.MSMSScoreParameters;
 import io.github.mzmine.parameters.ParameterSet;
@@ -82,7 +80,7 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 
 public class PostColumnReactionTask extends AbstractFeatureListTask {
 
-  private static final Logger logger = Logger.getLogger(OnlineLcReactivityTask.class.getName());
+  private static final Logger logger = Logger.getLogger(PostColumnReactionTask.class.getName());
   private final FeatureList flist;
   private final String description;
   private final Map<String, Integer> annotationCounts = new HashMap<>();
@@ -93,7 +91,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
 
 
   public PostColumnReactionTask(@NotNull ParameterSet parameters, @NotNull Instant moduleCallDate) {
-    super(null, moduleCallDate, parameters, OnlineLcReactivityModule.class);
+    super(null, moduleCallDate, parameters, PostColumnReactionModule.class);
 
     //Define feature list for processing
     this.flist = parameters.getParameter(PostColumnReactionParameters.flist).getValue()
@@ -233,6 +231,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
     setStatus(TaskStatus.FINISHED);
   }
 
+  // Annotate correlated row based on the preferred annotation of the base row.
   private void annotateUnannotatedFeature(FeatureListRow correlatedRow, FeatureListRow baseRow) {
     if (correlatedRow.getPreferredAnnotation() == null || correlatedRow.getCompoundAnnotations()
         .isEmpty()) {
@@ -282,9 +281,11 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
     }
   }
 
+  // Predict molecular formula of the correlated row based on the annotated formula of the base row.
   public void predictCorrelatedFormula(FeatureListRow correlatedRow, FeatureListRow baseRow) {
 
     try {
+      // Extract the baseRow's molecular formula and convert it to an IMolecularFormula
       MolecularFormulaRange molecularFormulaRange = new MolecularFormulaRange();
       List<CompoundDBAnnotation> baseRowCompoundAnnotations = baseRow.getCompoundAnnotations();
       String baseFomrulaString;
@@ -294,11 +295,13 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
           baseFomrulaString, DefaultChemObjectBuilder.getInstance());
 
       Iterable<IIsotope> isotopes = baseFormula.isotopes();
-      List<FeatureListRow> correlatedRows = new ArrayList<>();  // this is not yet very elegant. The task creates a feature list with one row for each prediction because the prediction task uses a feature list as input. Maybe create one feature list for all correlated rows of one annotation and then run the formula prediction. Alternatively, the prediction task can be adjusted to accept one single feature list row.
+      List<FeatureListRow> correlatedRows = new ArrayList<>();  // This is not yet very elegant. The task creates a feature list with one row for each prediction because the prediction task uses a feature list as input. Maybe create one feature list for all correlated rows of one annotation and then run the formula prediction. Alternatively, the prediction task can be adjusted to accept one single feature list row.
       correlatedRows.add(correlatedRow);
       IsotopeFactory iFac = Isotopes.getInstance();
       IIsotope oxygenIsotope = iFac.getMajorIsotope("O");
 
+      // Set the range for predicting the molecular formula of the correlated row based on the molecular formula of the base row.
+      // Add the possibility for 8 additional Oxygen and Hydrogen atoms.
       for (IIsotope i : isotopes) {
         IIsotope majorIsotope = iFac.getMajorIsotope(i.getSymbol());
         int baseIsotopeCount = baseFormula.getIsotopeCount(i);
@@ -309,6 +312,8 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
         molecularFormulaRange.addIsotope(majorIsotope, 0, isotopeCount);
       }
 
+      // Set the molecular formula range for the prediction parameter set.
+      // Add the option for up to 8 Oxygen atoms even if no Oxygen is contained in the base row annotation.
       if (molecularFormulaRange.contains(oxygenIsotope)) {
         this.predParamSet.getParameter(elements).setValue(molecularFormulaRange);
       } else {
@@ -316,6 +321,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
         this.predParamSet.getParameter(elements).setValue(molecularFormulaRange);
       }
 
+      // Create a task for molecular formula prediction and execute it.
       FormulaPredictionFeatureListTask newTask = new FormulaPredictionFeatureListTask(null,
           correlatedRows, this.predParamSet, Instant.now());
       newTask.run();
@@ -324,6 +330,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
     }
   }
 
+  // Check whether the feature list to be processed contains all raw data files declared as unreacted.
   private boolean checkUnreactedSelection(FeatureList aligned, List<RawDataFile> unreactedRaws) {
 
     List<RawDataFile> flRaws = aligned.getRawDataFiles();

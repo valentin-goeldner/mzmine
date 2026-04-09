@@ -212,6 +212,9 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
 
     // Process correlated rows for each annotated row
     for (FeatureListRow annotatedRow : annotatedRows) {
+
+      // Collect all correlated rows of a given base row not present in an unreacted control into a list.
+      List<FeatureListRow> correlatedRows = new ArrayList<>();
       correlationMap.streamAllCorrelatedRows(annotatedRow, rows).forEach(rowsRelationship -> {
         if (rowsRelationship.getScore() >= corrThreshold) {
           FeatureListRow correlatedRow = rowsRelationship.getOtherRow(annotatedRow);
@@ -222,56 +225,58 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
 
           // Annotate unannotated features
           if (!isInUnreacted) {
-            annotateUnannotatedFeature(correlatedRow, annotatedRow);
+            correlatedRows.add(rowsRelationship.getOtherRow(annotatedRow));
           }
         }
       });
+
+      annotateUnannotatedFeatures(correlatedRows, annotatedRow);
     }
 
     setStatus(TaskStatus.FINISHED);
   }
 
-  // Annotate correlated row based on the preferred annotation of the base row.
-  private void annotateUnannotatedFeature(FeatureListRow correlatedRow, FeatureListRow baseRow) {
-    if (correlatedRow.getPreferredAnnotation() == null || correlatedRow.getCompoundAnnotations()
-        .isEmpty()) {
-      // Alternative way of selecting the base annotation in case multiple annotations are present for the precursor
-//      Optional<FeatureAnnotation> annotationWithFormula = CompoundAnnotationUtils.streamFeatureAnnotations(baseRow)
-//          .filter(a -> StringUtils.hasValue(a.getFormula())).findFirst();
-//
-//      if(annotationWithFormula.isPresent()) {
-//        FeatureAnnotation annotation = annotationWithFormula.get();
-//      }
+  // Annotate correlated rows based on the preferred annotation of the base row.
+  private void annotateUnannotatedFeatures(List<FeatureListRow> correlatedRows,
+      FeatureListRow baseRow) {
 
-      // Create name for transformation product based on name of the parent compound, the exact mass and possibly a terminal letter if multiple transformation products with the same parent and nominal m/z exist
-      String baseAnnotation = baseRow.getPreferredAnnotationName();
-      if (baseAnnotation != null) {
-        String roundedMz = String.valueOf(Math.round(correlatedRow.getAverageMZ()));
-        String baseTpAnnotation = baseAnnotation + "_ETP_" + roundedMz;
+    // If automated prediction of molecular formulae for transformation products is selected, their formula is predicted based on the base row.
+    if (this.checkFormulaPred) {
+      predictCorrelatedFormula(correlatedRows, baseRow);
+    }
 
-        // Get the current count for this base annotation
-        int count = annotationCounts.getOrDefault(baseTpAnnotation, 0);
-        String tpAnnotation;
+    // Loop through all correlated rows and annotate based on the base row.
+    for (FeatureListRow correlatedRow : correlatedRows) {
+      if (correlatedRow.getPreferredAnnotation() == null || correlatedRow.getCompoundAnnotations()
+          .isEmpty()) {
 
-        if (count > 0) {
-          char suffix = (char) ('a' + count);
-          tpAnnotation = baseTpAnnotation + suffix;
-        } else {
-          tpAnnotation = baseTpAnnotation;
-        }
+        // Create name for transformation product based on name of the parent compound, the exact mass and possibly a terminal letter if multiple transformation products with the same parent and nominal m/z exist.
+        String baseAnnotation = baseRow.getPreferredAnnotationName();
+        if (baseAnnotation != null) {
+          String roundedMz = String.valueOf(Math.round(correlatedRow.getAverageMZ()));
+          String baseTpAnnotation = baseAnnotation + "_ETP_" + roundedMz;
 
-        // Increment the count for this base annotation
-        annotationCounts.put(baseTpAnnotation, count + 1);
+          // Get the current count for this base annotation.
+          int count = annotationCounts.getOrDefault(baseTpAnnotation, 0);
+          String tpAnnotation;
 
-        // Annotate the transformation product based on this name
-        SimpleCompoundDBAnnotation annotation = new SimpleCompoundDBAnnotation();
-        annotation.put(PrecursorMZType.class, correlatedRow.getAverageMZ());
-        annotation.put(CompoundNameType.class, tpAnnotation);
-        correlatedRow.addCompoundAnnotation(annotation);
+          if (count > 0) {
+            char suffix = (char) ('a' + count);
+            tpAnnotation = baseTpAnnotation + suffix;
+          } else {
+            tpAnnotation = baseTpAnnotation;
+          }
 
-        // If automated prediction of molecular formulae for transformation products is selected, the formula is predicted and added to the annotation
-        if (this.checkFormulaPred) {
-          predictCorrelatedFormula(correlatedRow, baseRow);
+          // Increment the count for this base annotation
+          annotationCounts.put(baseTpAnnotation, count + 1);
+
+          // Annotate the correlated row.
+          SimpleCompoundDBAnnotation annotation = new SimpleCompoundDBAnnotation();
+          annotation.put(PrecursorMZType.class, correlatedRow.getAverageMZ());
+          annotation.put(CompoundNameType.class, tpAnnotation);
+          correlatedRow.addCompoundAnnotation(annotation);
+
+          // Add formula for correlated row if present.
           if (correlatedRow.getFormulas() != null && !correlatedRow.getFormulas().isEmpty()) {
             ResultFormula correlatedFormula = correlatedRow.getFormulas().getFirst();
             annotation.setFormula(correlatedFormula.toString());
@@ -282,7 +287,8 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
   }
 
   // Predict molecular formula of the correlated row based on the annotated formula of the base row.
-  public void predictCorrelatedFormula(FeatureListRow correlatedRow, FeatureListRow baseRow) {
+  public void predictCorrelatedFormula(List<FeatureListRow> correlatedRows,
+      FeatureListRow baseRow) {
 
     try {
       // Extract the baseRow's molecular formula and convert it to an IMolecularFormula
@@ -295,8 +301,6 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
           baseFomrulaString, DefaultChemObjectBuilder.getInstance());
 
       Iterable<IIsotope> isotopes = baseFormula.isotopes();
-      List<FeatureListRow> correlatedRows = new ArrayList<>();  // This is not yet very elegant. The task creates a feature list with one row for each prediction because the prediction task uses a feature list as input. Maybe create one feature list for all correlated rows of one annotation and then run the formula prediction. Alternatively, the prediction task can be adjusted to accept one single feature list row.
-      correlatedRows.add(correlatedRow);
       IsotopeFactory iFac = Isotopes.getInstance();
       IIsotope oxygenIsotope = iFac.getMajorIsotope("O");
 

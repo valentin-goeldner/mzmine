@@ -119,7 +119,7 @@ public class FeatureDataSetCalc extends AbstractTask {
       }
       logger.info("Adding EIC datasets to plot");
       chromPlot.applyWithNotifyChanges(false, true, () -> {
-        chromPlot.removeAllDataSetsOf(MzRangeEicDataSet.class, false);
+        chromPlot.removeAllDataSetsOf(MzRangeEicDataSet.class);
         chromPlot.addDataSets(datasets);
       });
     });
@@ -153,8 +153,7 @@ public class FeatureDataSetCalc extends AbstractTask {
       Range<Double> mzRange = mzRangesSorted.get(i);
       IonTimeSeries<? extends Scan> series = builder.toIonTimeSeriesWithLeadingAndTrailingZero(null,
           scans);
-      datasets.add(
-          new MzRangeEicDataSet(series, mzRange, dataFile.getColor()));
+      datasets.add(new MzRangeEicDataSet(series, mzRange, dataFile));
     }
     doneFiles.incrementAndGet();
     return datasets;

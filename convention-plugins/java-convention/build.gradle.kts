@@ -36,10 +36,11 @@ semver {
 // this variable is set by running .\gradlew publish with the command line argument -Pmziorepo=true
 val pushOnline: Boolean = project.findProperty("mziorepo")?.toString()?.toBoolean() ?: false
 
-
-kotlin {
-    jvmToolchain(23)
-}
+// removed the definition. Somehow JDK25 did not work maybe incompatible with kotlin?
+// just use the default that comes with gradle?
+//kotlin {
+//    jvmToolchain(23)
+//}
 
 dependencies {
     implementation(libs.javafx.plugin)

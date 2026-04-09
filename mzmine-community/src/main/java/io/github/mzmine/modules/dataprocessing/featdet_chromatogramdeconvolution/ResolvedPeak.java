@@ -39,9 +39,9 @@ import io.github.mzmine.datamodel.impl.SimpleDataPoint;
 import io.github.mzmine.datamodel.impl.SimpleFeatureInformation;
 import io.github.mzmine.datamodel.msms.DDAMsMsInfo;
 import io.github.mzmine.gui.chartbasics.simplechart.providers.PlotXYDataProvider;
+import io.github.mzmine.javafx.util.FxColorUtil;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.taskcontrol.TaskStatus;
-import io.github.mzmine.javafx.util.FxColorUtil;
 import io.github.mzmine.util.maths.CenterFunction;
 import io.github.mzmine.util.scans.ScanUtils;
 import java.awt.Color;
@@ -439,5 +439,10 @@ public class ResolvedPeak implements PlotXYDataProvider {
   @Override
   public double getComputationFinishedPercentage() {
     return 1d;
+  }
+
+  @Override
+  public boolean isComputed() {
+    return true;
   }
 }

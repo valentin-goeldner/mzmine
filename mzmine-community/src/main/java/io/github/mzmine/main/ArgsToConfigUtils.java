@@ -29,7 +29,6 @@ import io.github.mzmine.gui.DesktopService;
 import io.github.mzmine.gui.preferences.MZminePreferences;
 import io.github.mzmine.util.StringUtils;
 import io.github.mzmine.util.files.FileAndPathUtil;
-import io.github.mzmine.util.web.ProxyUtils;
 import io.mzio.mzmine.startup.MZmineCoreArgumentParser;
 import io.mzio.users.gui.fx.LoginOptions;
 import io.mzio.users.gui.fx.UsersController;
@@ -64,8 +63,6 @@ class ArgsToConfigUtils {
     checkAndOverrideArgsTempDir(argsParser);
     applyTempDirFromConfiguration();
     TmpFileCleanup.runCleanup(); // clean temp files in new dir
-
-    checkAndOverrideArgsProxy(argsParser);
 
     checkAndOverrideArgsUser(argsParser);
 
@@ -150,19 +147,11 @@ class ArgsToConfigUtils {
     }
   }
 
-  static void checkAndOverrideArgsProxy(@NotNull final MZmineCoreArgumentParser argsParser) {
-    //set proxy to config
-    if (argsParser.getFullProxy() != null) {
-      // proxy was already set
-      ConfigService.getPreferences().setProxy(ProxyUtils.getSelectedSystemProxy());
-    }
-  }
-
   static void checkAndLoadArgsConfiguration(@NotNull final MZmineCoreArgumentParser argsParser) {
     // override preferences file by command line argument pref
     final File prefFile = Objects.requireNonNullElse(argsParser.getPreferencesFile(),
         MZmineConfiguration.CONFIG_FILE);
-    if("null".equals(prefFile.getName())){
+    if ("null".equals(prefFile.getName())) {
       logger.info("Preference file was set to null, not loading configuration.");
       return;
     }

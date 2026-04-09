@@ -67,6 +67,7 @@ public class FrameHeatmapProvider implements PlotXYZDataProvider {
 
   protected PaintScale paintScale;
   private double finishedPercentage;
+  private boolean isComputed = false;
 
   public FrameHeatmapProvider(Frame frame) {
     this.frame = frame;
@@ -132,9 +133,11 @@ public class FrameHeatmapProvider implements PlotXYZDataProvider {
       finishedPercentage = finishedScans / numScans;
     }
 
-    final double[] quantiles = MathUtils.calcQuantile(zValues.toDoubleArray(), new double[]{0.50, 0.98});
+    final double[] quantiles = MathUtils.calcQuantile(zValues.toDoubleArray(),
+        new double[]{0.50, 0.98});
     paintScale = MZmineCore.getConfiguration().getDefaultPaintScalePalette()
         .toPaintScale(PaintScaleTransform.LINEAR, Range.closed(quantiles[0], quantiles[1]));
+    isComputed = true;
   }
 
   public MobilityScan getMobilityScanAtValueIndex(int index) {
@@ -176,5 +179,12 @@ public class FrameHeatmapProvider implements PlotXYZDataProvider {
   @Override
   public Double getBoxWidth() {
     return null;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return isComputed;
   }
 }

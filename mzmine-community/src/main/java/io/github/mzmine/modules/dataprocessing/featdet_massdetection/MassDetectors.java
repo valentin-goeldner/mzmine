@@ -29,7 +29,7 @@ import io.github.mzmine.modules.dataprocessing.featdet_massdetection.auto.AutoMa
 import io.github.mzmine.modules.dataprocessing.featdet_massdetection.centroid.CentroidMassDetector;
 import io.github.mzmine.modules.dataprocessing.featdet_massdetection.exactmass.ExactMassDetector;
 import io.github.mzmine.modules.dataprocessing.featdet_massdetection.factor_of_lowest.FactorOfLowestMassDetector;
-import io.github.mzmine.modules.dataprocessing.featdet_massdetection.localmaxima.LocalMaxMassDetector;
+import io.github.mzmine.modules.dataprocessing.featdet_massdetection.local_max.LocalMaxMassDetector;
 import io.github.mzmine.modules.dataprocessing.featdet_massdetection.recursive.RecursiveMassDetector;
 import io.github.mzmine.modules.dataprocessing.featdet_massdetection.wavelet.WaveletMassDetector;
 import io.github.mzmine.parameters.ParameterSet;
@@ -86,7 +86,15 @@ public enum MassDetectors implements ModuleOptionsEnum<MassDetector> {
 
   @Override
   public String toString() {
-    return getStableId();
+    return switch (this) {
+      case FACTOR_OF_LOWEST -> "Factor of lowest signal";
+      case AUTO -> "Auto";
+      case CENTROID -> "Centroid";
+      case EXACT -> "Exact mass";
+      case LOCAL_MAX -> "Local maximum (beta)";
+      case RECURSIVE -> "Recursive threshold";
+      case WAVELET -> "Wavelet transform";
+    };
   }
 
   @Override

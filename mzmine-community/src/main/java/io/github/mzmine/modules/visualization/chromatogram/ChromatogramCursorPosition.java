@@ -27,11 +27,12 @@ package io.github.mzmine.modules.visualization.chromatogram;
 
 import io.github.mzmine.datamodel.RawDataFile;
 import io.github.mzmine.datamodel.Scan;
+import io.github.mzmine.gui.chartbasics.simplechart.PlotCursorPosition;
 
 /**
  *
  */
-public class ChromatogramCursorPosition {
+public class ChromatogramCursorPosition extends PlotCursorPosition {
 
   private double mzValue, retentionTime, intensityValue;
   private RawDataFile dataFile;
@@ -43,9 +44,19 @@ public class ChromatogramCursorPosition {
    * @param intensityValue
    * @param dataFile
    * @param scan
+   * @param valueIndex
    */
   public ChromatogramCursorPosition(double retentionTime, double mzValue, double intensityValue,
-      RawDataFile dataFile, Scan scan) {
+      RawDataFile dataFile, Scan scan, int valueIndex) {
+    final PlotCursorPosition pos = new PlotCursorPosition(retentionTime, intensityValue, mzValue,
+        valueIndex, null);
+    this(retentionTime, mzValue, intensityValue, dataFile, scan, pos);
+  }
+
+  public ChromatogramCursorPosition(double retentionTime, double mzValue, double intensityValue,
+      RawDataFile dataFile, Scan scan, PlotCursorPosition source) {
+    super(source);
+
     this.retentionTime = retentionTime;
     this.mzValue = mzValue;
     this.intensityValue = intensityValue;

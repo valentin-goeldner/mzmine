@@ -88,4 +88,9 @@ public interface XYValueProvider {
    * @return a finished percentage. (0.0-1.0)
    */
   double getComputationFinishedPercentage();
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  boolean isComputed();
 }

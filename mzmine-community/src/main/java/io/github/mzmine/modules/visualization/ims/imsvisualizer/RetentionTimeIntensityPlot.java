@@ -64,7 +64,7 @@ public class RetentionTimeIntensityPlot extends EChartViewer {
             RetentionTimeMobilityHeatMapPlot retentionTimeMobilityHeatMapPlot) {
 
         super(
-                ChartFactory.createXYLineChart(
+                FxChartFactory.createXYLineChart(
                         "",
                         "retention time",
                         "intensity",

@@ -28,7 +28,7 @@ package io.github.mzmine.util.collections;
 /**
  *
  */
-public record SimpleIndexRange(int min, int maxInclusive) implements IndexRange {
+record SimpleIndexRange(int min, int maxInclusive) implements IndexRange {
 
   public int size() {
     return maxExclusive() - min;

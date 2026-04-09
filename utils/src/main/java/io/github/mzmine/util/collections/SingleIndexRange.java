@@ -28,7 +28,7 @@ package io.github.mzmine.util.collections;
 /**
  *
  */
-public record SingleIndexRange(int index) implements IndexRange {
+record SingleIndexRange(int index) implements IndexRange {
 
   public int size() {
     return 1;

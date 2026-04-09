@@ -94,7 +94,8 @@ public class SmoothingSetupDialog extends ParameterSetupDialogWithPreview {
             fBox.setItems(FXCollections.observableArrayList(
                 newValue.getFeatures(newValue.getRawDataFile(0))));
           } else {
-            fBox.setItems(FXCollections.emptyObservableList());
+            // needs to be modifiable when using stringconverter
+            fBox.setItems(FXCollections.observableArrayList());
           }
         }));
 

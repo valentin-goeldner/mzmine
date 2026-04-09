@@ -25,7 +25,6 @@
 
 package io.github.mzmine.modules.dataanalysis.significance;
 
-import io.github.mzmine.datamodel.AbundanceMeasure;
 import io.github.mzmine.datamodel.features.FeatureListRow;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +33,6 @@ public interface RowSignificanceTest {
   /**
    * @return The result of this test or null of the test failed.
    */
-  @Nullable RowSignificanceTestResult test(FeatureListRow row, AbundanceMeasure abundanceMeasure);
+  @Nullable RowSignificanceTestResult test(FeatureListRow row);
 
 }

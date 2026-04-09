@@ -25,8 +25,8 @@
 
 package io.github.mzmine.gui.chartbasics.simplechart.providers;
 
-import io.github.mzmine.taskcontrol.TaskStatus;
 import io.github.mzmine.javafx.util.FxColorUtil;
+import io.github.mzmine.taskcontrol.TaskStatus;
 import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -140,5 +140,12 @@ public class SimpleXYProvider implements PlotXYDataProvider {
   @Override
   public double getComputationFinishedPercentage() {
     return finishedPercentage;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return true;
   }
 }

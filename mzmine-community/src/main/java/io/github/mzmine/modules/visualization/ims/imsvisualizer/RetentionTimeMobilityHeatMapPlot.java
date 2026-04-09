@@ -58,7 +58,7 @@ public class RetentionTimeMobilityHeatMapPlot extends EChartViewer {
 
   public RetentionTimeMobilityHeatMapPlot(XYZDataset dataset, PaintScale paintScale) {
 
-    super(ChartFactory.createScatterPlot("", "retention time", "mobility", dataset,
+    super(FxChartFactory.createScatterPlot("", "retention time", "mobility", dataset,
         PlotOrientation.VERTICAL, true, true, true));
 
     JFreeChart chart = getChart();

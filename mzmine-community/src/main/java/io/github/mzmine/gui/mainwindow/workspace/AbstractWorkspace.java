@@ -54,6 +54,7 @@ import io.github.mzmine.modules.dataprocessing.featdet_msn_tree.MsnTreeFeatureDe
 import io.github.mzmine.modules.dataprocessing.featdet_targeted.TargetedFeatureDetectionModule;
 import io.github.mzmine.modules.dataprocessing.filter_clearannotations.ClearFeatureAnnotationsModule;
 import io.github.mzmine.modules.dataprocessing.filter_interestingfeaturefinder.AnnotateIsomersModule;
+import io.github.mzmine.modules.dataprocessing.filter_sortannotations.PreferredAnnotationRankingModule;
 import io.github.mzmine.modules.dataprocessing.group_imagecorrelate.ImageCorrelateGroupingModule;
 import io.github.mzmine.modules.dataprocessing.group_metacorrelate.corrgrouping.CorrelateGroupingModule;
 import io.github.mzmine.modules.dataprocessing.group_metacorrelate.export.ExportCorrAnnotationModule;
@@ -93,6 +94,7 @@ import io.github.mzmine.modules.io.export_features_venn.VennExportModule;
 import io.github.mzmine.modules.io.export_features_xml.ExportFeaturesDataModule;
 import io.github.mzmine.modules.io.export_library_analysis_csv.LibraryAnalysisCSVExportModule;
 import io.github.mzmine.modules.io.export_library_gnps_batch.GNPSLibraryBatchExportModule;
+import io.github.mzmine.modules.io.export_merge_libraries.MergeLibrariesModule;
 import io.github.mzmine.modules.io.export_msmsquality.MsMsQualityExportModule;
 import io.github.mzmine.modules.io.export_network_graphml.NetworkGraphMlExportModule;
 import io.github.mzmine.modules.io.export_scans_modular.ExportScansFeatureModule;
@@ -208,7 +210,8 @@ public abstract class AbstractWorkspace implements Workspace {
 
     menu.setOnShowing(_ -> getWorkspaceMenuHelper().fillRecentProjects(recentProjects));
 
-    addModuleMenuItem(menu, ProjectLoadModule.class, KeyCode.O, KeyCombination.SHORTCUT_DOWN);
+    addMenuItem(menu, "Open project", () -> ProjectLoadModule.openQuickSelect(), KeyCode.O, KeyCombination.SHORTCUT_DOWN);
+    addModuleMenuItem(menu, ProjectLoadModule.class, KeyCode.O, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN);
     menu.getItems().add(recentProjects);
     addModuleMenuItem(menu, ProjectSaveModule.class, KeyCode.S, KeyCombination.SHORTCUT_DOWN);
     addModuleMenuItem(menu, ProjectSaveAsModule.class, KeyCode.S, KeyCombination.SHORTCUT_DOWN,
@@ -306,7 +309,8 @@ public abstract class AbstractWorkspace implements Workspace {
         FormulaPredictionFeatureListModule.class, Ms2SearchModule.class);
     addModuleMenuItems(menu, "EC-MS workflow", CalcEcmsPotentialModule.class);
     menu.getItems().add(new SeparatorMenuItem());
-    addModuleMenuItems(menu, ClearFeatureAnnotationsModule.class);
+    addModuleMenuItems(menu, ClearFeatureAnnotationsModule.class,
+        PreferredAnnotationRankingModule.class);
     return menu;
   }
 
@@ -354,7 +358,7 @@ public abstract class AbstractWorkspace implements Workspace {
         KeyCombination.SHORTCUT_DOWN);
     addModuleMenuItems(menu, IsotopePatternPreviewModule.class, QualityParametersModule.class);
     addModuleMenuItems(menu, "Libraries", LibraryAnalysisCSVExportModule.class,
-        MsMsQualityExportModule.class);
+        MsMsQualityExportModule.class, MergeLibrariesModule.class);
     addModuleMenuItems(menu, "timsTOF fleX", TimsTOFMaldiAcquisitionModule.class,
         SimsefImagingSchedulerModule.class);
     return menu;

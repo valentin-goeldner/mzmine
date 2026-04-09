@@ -26,6 +26,7 @@
 package io.github.mzmine.modules.visualization.chromatogram;
 
 import com.google.common.collect.Range;
+import io.github.mzmine.datamodel.RawDataFile;
 import io.github.mzmine.datamodel.Scan;
 import io.github.mzmine.datamodel.featuredata.IonTimeSeries;
 import io.github.mzmine.gui.chartbasics.simplechart.datasets.ColoredXYDataset;
@@ -33,17 +34,24 @@ import io.github.mzmine.gui.chartbasics.simplechart.datasets.RunOption;
 import io.github.mzmine.gui.chartbasics.simplechart.providers.impl.series.IonTimeSeriesToXYProvider;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.RangeUtils;
-import javafx.scene.paint.Color;
 
 /**
  * Simple dataset for extracted ion chromatograms
  */
 public class MzRangeEicDataSet extends ColoredXYDataset {
 
+
+  private final RawDataFile rawFile;
+
   public MzRangeEicDataSet(final IonTimeSeries<? extends Scan> series, final Range<Double> mzRange,
-      final Color color) {
+      final RawDataFile rawFile) {
     super(new IonTimeSeriesToXYProvider(series,
-            MZmineCore.getConfiguration().getGuiFormats().mz(RangeUtils.rangeCenter(mzRange)), color),
-        RunOption.THIS_THREAD);
+        MZmineCore.getConfiguration().getGuiFormats().mz(RangeUtils.rangeCenter(mzRange)),
+        rawFile.getColor()), RunOption.THIS_THREAD);
+    this.rawFile = rawFile;
+  }
+
+  public RawDataFile getRawFile() {
+    return rawFile;
   }
 }

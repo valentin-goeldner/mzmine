@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class MSnTreeVisualizerModule implements MZmineRunnableModule {
 
-  public static final String MODULE_NAME = "MS(n) spectra tree";
+  public static final String MODULE_NAME = "MSn spectral trees";
 
   public static final String DESCRIPTION = "Open fragment spectra trees of MS2 to MSn.";
 

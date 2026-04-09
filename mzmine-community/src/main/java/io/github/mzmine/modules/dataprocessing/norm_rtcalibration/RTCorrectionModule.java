@@ -29,6 +29,7 @@ import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineProcessingModule;
+import io.github.mzmine.modules.dataprocessing.norm_rtcalibration2.ScanRtCorrectionModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.taskcontrol.Task;
 import io.github.mzmine.util.ExitCode;
@@ -41,8 +42,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class RTCorrectionModule implements MZmineProcessingModule {
 
-  private static final String MODULE_NAME = "Retention time correction";
-  private static final String MODULE_DESCRIPTION = "The retention time correction module attempts to reduce the deviation of retention times between feature lists, by searching for common features in these lists and using them as correction standards.";
+  public static final String MODULE_NAME = "Retention time correction on feature lists";
+  private static final String MODULE_DESCRIPTION = """
+      This retention time correction module attempts to reduce the deviation of retention times between feature lists, /
+      by searching for common features in these lists and using them as correction standards.
+      The correction is applied to the features retention times but not to the scans. This leads to a disconnect between the feature list and scan retention times.
+      Also see the %s module for correction of the scan data.""".formatted(
+      ScanRtCorrectionModule.MODULE_NAME);
 
   @Override
   public @NotNull String getName() {

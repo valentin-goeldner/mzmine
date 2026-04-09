@@ -25,13 +25,13 @@
 
 package io.github.mzmine.gui.chartbasics.gui.javafx.demo;
 
+import io.github.mzmine.gui.chartbasics.FxChartFactory;
 import io.github.mzmine.gui.chartbasics.gui.javafx.EChartViewer;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
@@ -42,7 +42,7 @@ public class FXChartGestureDemo extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     XYDataset dataset = createDataset();
-    JFreeChart chart = ChartFactory.createXYLineChart("Random", "i", "r", createDataset());
+    JFreeChart chart = FxChartFactory.createXYLineChart("Random", "i", "r", createDataset());
     EChartViewer canvas = new EChartViewer(chart);
     StackPane stackPane = new StackPane();
     stackPane.getChildren().add(canvas);

@@ -32,7 +32,6 @@ import io.github.mzmine.parameters.impl.SimpleParameterSet;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.IntegerParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalParameter;
-import io.github.mzmine.parameters.parametertypes.WindowSettingsParameter;
 import io.github.mzmine.parameters.parametertypes.ranges.MZRangeParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeaturesParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
@@ -84,16 +83,10 @@ public class TICVisualizerParameters extends SimpleParameterSet {
   private Map<Feature, String> peakLabelMap;
 
   /**
-   * Windows size and position
-   */
-  public static final WindowSettingsParameter WINDOWSETTINGSPARAMETER = new WindowSettingsParameter();
-
-  /**
    * Create the parameter set.
    */
   public TICVisualizerParameters() {
-    super(new Parameter[]{DATA_FILES, scanSelection, PLOT_TYPE, ticMaxSamples, MZ_RANGE, PEAKS,
-            WINDOWSETTINGSPARAMETER},
+    super(new Parameter[]{DATA_FILES, scanSelection, PLOT_TYPE, ticMaxSamples, MZ_RANGE, PEAKS},
         "https://mzmine.github.io/mzmine_documentation/visualization_modules/raw_data_overview/raw_data_additional.html#chromatogram-plot");
     peakLabelMap = null;
   }

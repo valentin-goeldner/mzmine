@@ -41,6 +41,7 @@ import io.github.mzmine.project.impl.RawDataFileImpl;
 import io.github.mzmine.taskcontrol.AbstractTask;
 import io.github.mzmine.taskcontrol.TaskStatus;
 import io.github.mzmine.util.MemoryMapStorage;
+import io.github.mzmine.util.XMLUtils;
 import io.github.mzmine.util.exceptions.ExceptionUtils;
 import io.github.mzmine.util.scans.ScanUtils;
 import java.io.File;
@@ -50,9 +51,9 @@ import java.nio.ByteOrder;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.xml.sax.Attributes;
@@ -146,12 +147,10 @@ public class MzDataImportTask extends AbstractTask implements RawDataImportTask 
     setStatus(TaskStatus.PROCESSING);
     logger.info("Started parsing file " + file);
 
-    // Use the default (non-validating) parser
-    SAXParserFactory factory = SAXParserFactory.newInstance();
-
     try {
 
-      SAXParser saxParser = factory.newSAXParser();
+      // decision: reject DTDs and external entities in user-supplied XML files.
+      final SAXParser saxParser = XMLUtils.newSAXParser();
       saxParser.parse(file, handler);
 
       newMZmineFile.getAppliedMethods()
@@ -186,8 +185,8 @@ public class MzDataImportTask extends AbstractTask implements RawDataImportTask 
   }
 
   @Override
-  public RawDataFile getImportedRawDataFile() {
-    return newMZmineFile;
+  public @NotNull List<RawDataFile> getImportedRawDataFiles() {
+    return getStatus() == TaskStatus.FINISHED ? List.of(newMZmineFile) : List.of();
   }
 
   private class MzDataHandler extends DefaultHandler {

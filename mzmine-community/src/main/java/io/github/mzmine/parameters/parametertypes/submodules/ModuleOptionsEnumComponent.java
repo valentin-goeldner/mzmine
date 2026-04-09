@@ -169,7 +169,8 @@ public class ModuleOptionsEnumComponent<EnumType extends Enum<EnumType> & Module
     return selectedValue.getValue();
   }
 
-  public void setSelectedValue(EnumType selected) {
+  public void setSelectedValue(EnumType selected, ParameterSet embedded) {
+    paramPanesMap.get(selected).setParameterValuesToComponents(embedded);
     selectedValue.setValue(selected);
   }
 
@@ -186,6 +187,12 @@ public class ModuleOptionsEnumComponent<EnumType extends Enum<EnumType> & Module
   public void updateParameterSetFromComponents() {
     if (paramPane != null) {
       paramPane.updateParameterSetFromComponents();
+    }
+  }
+
+  public void updateParameterSetFromComponents(ParameterSet parameters) {
+    if (paramPane != null) {
+      paramPane.updateParameterSetFromComponents(parameters);
     }
   }
 

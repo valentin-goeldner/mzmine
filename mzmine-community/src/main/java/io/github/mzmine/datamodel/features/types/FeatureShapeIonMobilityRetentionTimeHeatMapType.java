@@ -88,14 +88,15 @@ public class FeatureShapeIonMobilityRetentionTimeHeatMapType extends LinkedGraph
   }
 
   @Override
-  public double getColumnWidth() {
-    return DEFAULT_GRAPHICAL_CELL_WIDTH + 50;
+  public double getPrefColumnWidth() {
+    return LARGE_GRAPHICAL_CELL_WIDTH;
   }
 
   @Nullable
   @Override
-  public Runnable getDoubleClickAction(final @Nullable FeatureTableFX table, @NotNull ModularFeatureListRow row,
-      @NotNull List<RawDataFile> file, DataType<?> superType, @Nullable final Object value) {
+  public Runnable getDoubleClickAction(final @Nullable FeatureTableFX table,
+      @NotNull ModularFeatureListRow row, @NotNull List<RawDataFile> file, DataType<?> superType,
+      @Nullable final Object value) {
     return () -> FxThread.runLater(() -> MZmineCore.getDesktop()
         .addTab(new IMSFeatureVisualizerTab(row.getFeature(file.get(0)))));
   }

@@ -57,7 +57,7 @@ public class IntensityMobilityPlot extends EChartViewer {
   private final RawDataFile[] dataFiles;
 
   public IntensityMobilityPlot(XYDataset dataset, ImsVisualizerTask imsTask) {
-    super(ChartFactory.createXYLineChart("", "intensity", "", dataset, PlotOrientation.VERTICAL,
+    super(FxChartFactory.createXYLineChart("", "intensity", "", dataset, PlotOrientation.VERTICAL,
         false, true, false));
     JFreeChart chart = getChart();
     XYPlot plot = chart.getXYPlot();

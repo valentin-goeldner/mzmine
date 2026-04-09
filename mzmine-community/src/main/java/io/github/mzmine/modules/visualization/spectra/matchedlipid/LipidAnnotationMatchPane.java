@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2025 The mzmine Development Team
+ * Copyright (c) 2004-2026 The mzmine Development Team
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -74,13 +74,11 @@ public class LipidAnnotationMatchPane extends AbstractFeatureListRowsPane {
   }
 
   @Override
-  public void onRowsChanged(List<? extends FeatureListRow> rows) {
-    super.onRowsChanged(rows);
-  }
-
-  @Override
   public void onSelectedRowsChanged(List<? extends FeatureListRow> selectedRows) {
     super.onSelectedRowsChanged(selectedRows);
+    if (!super.isAutoUpdate()) {
+      return;
+    }
     matches = 0;
     GridPane pane = new GridPane();
     GridPane.setHgrow(pane, Priority.ALWAYS);

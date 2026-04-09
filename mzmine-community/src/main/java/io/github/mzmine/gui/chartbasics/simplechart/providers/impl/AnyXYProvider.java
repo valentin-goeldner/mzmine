@@ -106,4 +106,9 @@ public class AnyXYProvider implements PlotXYDataProvider {
   public double getComputationFinishedPercentage() {
     return 1;
   }
+
+  @Override
+  public boolean isComputed() {
+    return true;
+  }
 }

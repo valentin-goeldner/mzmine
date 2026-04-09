@@ -139,7 +139,7 @@ public class SummedIntensityMobilitySeriesToMobilityMzHeatmapProvider implements
 
   @Override
   public void computeValues(Property<TaskStatus> status) {
-
+    // nothing to do
   }
 
   @Override
@@ -187,5 +187,12 @@ public class SummedIntensityMobilitySeriesToMobilityMzHeatmapProvider implements
   @Nullable
   public ModularFeature getSourceFeature() {
     return feature;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return true;
   }
 }

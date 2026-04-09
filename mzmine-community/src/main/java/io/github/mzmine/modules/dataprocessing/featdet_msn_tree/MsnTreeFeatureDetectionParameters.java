@@ -49,7 +49,9 @@ public class MsnTreeFeatureDetectionParameters extends SimpleParameterSet {
       "Suffix added to the raw file name to create feature list name", "msn trees");
 
   public MsnTreeFeatureDetectionParameters() {
-    super(dataFiles, scanSelection, mzTol, suffix);
+    super(
+        "https://mzmine.github.io/mzmine_documentation/module_docs/featuredet_msn_tree/msn_tree_builder.html",
+        dataFiles, scanSelection, mzTol, suffix);
   }
 
   @Override

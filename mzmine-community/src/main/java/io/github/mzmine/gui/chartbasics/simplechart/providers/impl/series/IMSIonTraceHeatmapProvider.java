@@ -66,6 +66,7 @@ public class IMSIonTraceHeatmapProvider implements PlotXYZDataProvider,
   private final NumberFormat mzFormat;
 
   private double finishedPerecentage;
+  private boolean isComputed;
 
   /**
    * Constructs an ion trace with a given mz and rt range from a raw data file. This trace is
@@ -118,6 +119,14 @@ public class IMSIonTraceHeatmapProvider implements PlotXYZDataProvider,
       num++;
       finishedPerecentage = (double) num / numFrames;
     }
+    isComputed = true;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return isComputed;
   }
 
   @Override

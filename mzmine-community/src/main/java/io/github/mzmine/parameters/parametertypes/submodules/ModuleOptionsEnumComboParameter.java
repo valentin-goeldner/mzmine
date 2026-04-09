@@ -155,13 +155,15 @@ public class ModuleOptionsEnumComboParameter<EnumType extends Enum<EnumType> & M
   @Override
   public void setValueFromComponent(ModuleOptionsEnumComponent<EnumType> component) {
     this.selectedValue = component.getValue();
-    component.updateParameterSetFromComponents();
+    final ParameterSet embedded = getEmbeddedParameters(selectedValue);
+    component.updateParameterSetFromComponents(embedded);
   }
 
   @Override
   public void setValueToComponent(ModuleOptionsEnumComponent<EnumType> component,
       @Nullable EnumType newValue) {
-    component.setSelectedValue(newValue);
+    final ParameterSet embedded = getEmbeddedParameters(newValue);
+    component.setSelectedValue(newValue, embedded);
   }
 
   @Override

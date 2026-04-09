@@ -25,13 +25,13 @@
 
 package io.github.mzmine.modules.dataanalysis.utils.imputation;
 
-import java.util.function.Function;
-import org.apache.commons.math3.linear.RealVector;
+import io.github.mzmine.datamodel.statistics.DataTableProcessingStep;
 
 /**
  * Imputes missing values based on the existing values of a single feature across all samples (one
  * column).
  */
-public interface ImputationFunction extends Function<RealVector, Double> {
+public interface ImputationFunction extends DataTableProcessingStep {
+
 
 }

@@ -25,9 +25,7 @@
 
 package io.github.mzmine.modules.visualization.scatterplot;
 
-import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.impl.SimpleParameterSet;
-import io.github.mzmine.parameters.parametertypes.WindowSettingsParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureListsParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureListsSelection;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureListsSelectionType;
@@ -37,14 +35,10 @@ public class ScatterPlotParameters extends SimpleParameterSet {
 
   public static final FeatureListsParameter featureLists = new FeatureListsParameter(1, 1);
 
-  /**
-   * Windows size and position
-   */
-  public static final WindowSettingsParameter windowSettings = new WindowSettingsParameter();
-
   public ScatterPlotParameters() {
-    super(new Parameter[] {featureLists, windowSettings},
-        "https://mzmine.github.io/mzmine_documentation/visualization_modules/processed_additional/processed_additional.html#scatter-plot");
+    super(
+        "https://mzmine.github.io/mzmine_documentation/visualization_modules/processed_additional/processed_additional.html#scatter-plot",
+        featureLists);
   }
 
   @Override

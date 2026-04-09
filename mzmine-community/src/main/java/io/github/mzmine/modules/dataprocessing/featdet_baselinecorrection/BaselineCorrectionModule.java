@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 public class BaselineCorrectionModule extends AbstractProcessingModule {
 
   public BaselineCorrectionModule() {
-    super("Baseline correction", BaselineCorrectionParameters.class,
+    super("Baseline correction (beta)", BaselineCorrectionParameters.class,
         MZmineModuleCategory.EIC_DETECTION, "Correct baseline drifts in chromatograms.");
   }
 

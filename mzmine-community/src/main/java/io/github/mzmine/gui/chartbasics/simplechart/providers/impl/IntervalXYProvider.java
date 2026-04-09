@@ -89,7 +89,7 @@ public class IntervalXYProvider implements PlotXYDataProvider, IntervalWidthProv
 
   @Override
   public void computeValues(Property<TaskStatus> status) {
-
+    // nothing to do
   }
 
   @Override
@@ -110,5 +110,12 @@ public class IntervalXYProvider implements PlotXYDataProvider, IntervalWidthProv
   @Override
   public double getComputationFinishedPercentage() {
     return 0;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return true;
   }
 }

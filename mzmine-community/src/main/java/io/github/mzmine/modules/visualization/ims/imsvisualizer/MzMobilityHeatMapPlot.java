@@ -75,7 +75,7 @@ public class MzMobilityHeatMapPlot extends EChartViewer {
   public MzMobilityHeatMapPlot(XYZDataset dataset, PaintScale paintScale, ImsVisualizerTask imsTask,
       IntensityMobilityPlot implot) {
 
-    super(ChartFactory.createScatterPlot("", "m/z", "mobility", dataset, PlotOrientation.VERTICAL,
+    super(FxChartFactory.createScatterPlot("", "m/z", "mobility", dataset, PlotOrientation.VERTICAL,
         true, true, true));
 
     chart = getChart();

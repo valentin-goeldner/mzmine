@@ -34,7 +34,6 @@ import io.github.mzmine.parameters.parametertypes.ComboFieldValue;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.ListDoubleParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalParameter;
-import io.github.mzmine.parameters.parametertypes.WindowSettingsParameter;
 import io.github.mzmine.parameters.parametertypes.combowithinput.MsLevelFilter;
 import io.github.mzmine.parameters.parametertypes.combowithinput.MsLevelFilter.Options;
 import io.github.mzmine.parameters.parametertypes.combowithinput.MsLevelFilterParameter;
@@ -96,11 +95,9 @@ public class MsMsParameters extends SimpleParameterSet {
       "Diagnostic fragmentation filtering", "See \"Help\" for detailed information",
       new SimpleParameterSet(new Parameter[]{targetedMZ_List, targetedNF_List}));
 
-  public static final WindowSettingsParameter windowSettings = new WindowSettingsParameter();
-
   public MsMsParameters() {
     super(new Parameter[]{dataFiles, xAxisType, yAxisType, zAxisType, msLevel, rtRange, mzRange,
-            mzTolerance, intensityFiltering, dffParameters, windowSettings},
+            mzTolerance, intensityFiltering, dffParameters},
         "https://mzmine.github.io/mzmine_documentation/visualization_modules/msmsplot/msms-plot.html");
   }
 

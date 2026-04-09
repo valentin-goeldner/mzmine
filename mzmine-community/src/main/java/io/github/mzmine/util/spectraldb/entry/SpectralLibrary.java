@@ -95,8 +95,14 @@ public class SpectralLibrary {
   }
 
   @NotNull
-  public String getName() {
+  public String getNameWithSize() {
     return String.format("%s (%d spectra)", name, size());
+  }
+
+  @NotNull
+  public String getName() {
+    // used to return library name with size but better to use the library name without size by default
+    return name;
   }
 
   public int size() {
@@ -105,7 +111,8 @@ public class SpectralLibrary {
 
   @Override
   public String toString() {
-    return getName();
+    // use name with size to represent in library tab etc
+    return getNameWithSize();
   }
 
   public @Nullable MemoryMapStorage getStorage() {

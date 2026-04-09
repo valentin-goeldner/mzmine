@@ -60,8 +60,9 @@ public class FxTextFlows {
     var textFlow = new TextFlow(nodes);
     textFlow.setTextAlignment(textAlignment);
     textFlow.setPrefHeight(Region.USE_COMPUTED_SIZE);
+    textFlow.setMinHeight(Region.USE_PREF_SIZE);
+    textFlow.setMaxHeight(Region.USE_PREF_SIZE);
     textFlow.setMaxWidth(Double.MAX_VALUE);
-    textFlow.setMaxHeight(Double.MAX_VALUE);
     return textFlow;
   }
 

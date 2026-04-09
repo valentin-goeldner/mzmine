@@ -163,7 +163,7 @@ public class LipidSpectrumProvider implements PlotXYDataProvider {
 
   @Override
   public void computeValues(Property<TaskStatus> status) {
-
+    // nothing to do
   }
 
   @Override
@@ -194,5 +194,12 @@ public class LipidSpectrumProvider implements PlotXYDataProvider {
   @Override
   public @org.jetbrains.annotations.Nullable String getToolTipText(int itemIndex) {
     return null;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return true;
   }
 }

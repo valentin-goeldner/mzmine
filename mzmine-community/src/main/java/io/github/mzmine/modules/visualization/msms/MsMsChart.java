@@ -100,7 +100,7 @@ public class MsMsChart extends SimpleXYZScatterPlot<MsMsDataProvider> {
     setLegendCanvas(new Canvas());
 
     // apply the theme here, let's see how that works
-    MZmineCore.getConfiguration().getDefaultChartTheme().apply(chart);
+    MZmineCore.getConfiguration().getDefaultChartTheme().apply(getChart());
   }
 
   public MsMsXYAxisType getXAxisType() {

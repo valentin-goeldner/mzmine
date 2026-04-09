@@ -35,7 +35,6 @@ import io.github.mzmine.parameters.impl.IonMobilitySupport;
 import io.github.mzmine.parameters.impl.SimpleParameterSet;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
-import io.github.mzmine.parameters.parametertypes.WindowSettingsParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureListsParameter;
 import io.github.mzmine.util.ExitCode;
 import javafx.scene.layout.Region;
@@ -85,12 +84,11 @@ public class KendrickMassPlotParameters extends SimpleParameterSet {
       "Enter a repeating molecular formula used as Kendrick mass base to calculate Kendrick mass defect",
       "CH2");
 
-  public static final WindowSettingsParameter windowSettings = new WindowSettingsParameter();
 
   public KendrickMassPlotParameters() {
     super(new Parameter[]{featureList, xAxisValues, xAxisCustomKendrickMassBase, yAxisValues,
             yAxisCustomKendrickMassBase, colorScaleValues, colorScaleCustomKendrickMassBase,
-            bubbleSizeValues, bubbleSizeCustomKendrickMassBase, windowSettings},
+            bubbleSizeValues, bubbleSizeCustomKendrickMassBase},
         "https://mzmine.github.io/mzmine_documentation/visualization_modules/kendrickmass/kendrick_mass_plot.html");
   }
 

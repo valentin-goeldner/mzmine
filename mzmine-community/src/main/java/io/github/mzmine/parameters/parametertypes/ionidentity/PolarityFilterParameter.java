@@ -61,4 +61,10 @@ public class PolarityFilterParameter extends ComboParameter<PolarityType> {
   public ComboComponent<PolarityType> createEditingComponent() {
     return new PolarityFilterComboBox(getChoices(), getValue());
   }
+
+  @Override
+  public PolarityFilterParameter cloneParameter() {
+    return new PolarityFilterParameter(getName(), getDescription(),
+        getChoices().toArray(PolarityType[]::new), getValue());
+  }
 }

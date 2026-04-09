@@ -25,8 +25,15 @@
 
 package io.github.mzmine.javafx.util;
 
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.javafx.IkonResolver;
+
 public interface IconCodeSupplier {
 
   String getIconCode();
 
+  default Ikon getIkon() {
+    final String code = getIconCode();
+    return IkonResolver.getInstance().resolve(code).resolve(code);
+  }
 }

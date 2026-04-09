@@ -94,7 +94,8 @@ public class MobilogramBinningSetupDialog extends ParameterSetupDialogWithPrevie
             fBox.setItems(FXCollections.observableArrayList(
                 newValue.getFeatures(newValue.getRawDataFile(0))));
           } else {
-            fBox.setItems(FXCollections.emptyObservableList());
+            // needs to be modifiable list when using string converter
+            fBox.setItems(FXCollections.observableArrayList());
           }
         }));
 
@@ -147,15 +148,15 @@ public class MobilogramBinningSetupDialog extends ParameterSetupDialogWithPrevie
             FeatureUtils.featureToString(f))));
 
     final Integer binWidth = switch (((IMSRawDataFile) f.getRawDataFile()).getMobilityType()) {
-      case TIMS -> parameterSet.getParameter(MobilogramBinningParameters.timsBinningWidth)
-          .getValue();
-      case TRAVELING_WAVE -> parameterSet.getParameter(
-          MobilogramBinningParameters.twimsBinningWidth).getValue();
-      case DRIFT_TUBE -> parameterSet.getParameter(MobilogramBinningParameters.dtimsBinningWidth)
-          .getValue();
+      case TIMS ->
+          parameterSet.getParameter(MobilogramBinningParameters.timsBinningWidth).getValue();
+      case TRAVELING_WAVE ->
+          parameterSet.getParameter(MobilogramBinningParameters.twimsBinningWidth).getValue();
+      case DRIFT_TUBE ->
+          parameterSet.getParameter(MobilogramBinningParameters.dtimsBinningWidth).getValue();
       default -> throw new UnsupportedOperationException(
           "Summing of the mobility type in raw data file " + f.getRawDataFile().getName()
-          + " is unsupported.");
+              + " is unsupported.");
     };
     if (binWidth == null || binWidth == 0) {
       return;
@@ -169,7 +170,7 @@ public class MobilogramBinningSetupDialog extends ParameterSetupDialogWithPrevie
           binWidth);
       lbkApproxBinSize.setText(
           mobilityFormat.format(summedMobilogramAccess.getApproximateBinSize()) + " "
-          + summedMobilogramAccess.getDataFile().getMobilityType().getUnit());
+              + summedMobilogramAccess.getDataFile().getMobilityType().getUnit());
     }
 
     summedMobilogramAccess.setMobilogram(series.getSummedMobilogram());

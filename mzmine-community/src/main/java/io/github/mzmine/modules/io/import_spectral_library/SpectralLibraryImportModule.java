@@ -59,7 +59,7 @@ public class SpectralLibraryImportModule implements MZmineProcessingModule {
     final File[] files = parameters.getParameter(SpectralLibraryImportParameters.dataBaseFiles)
         .getValue();
     for (File f : files) {
-      Task newTask = new SpectralLibraryImportTask(project, f, moduleCallDate);
+      Task newTask = new SpectralLibraryImportTask(project, f, moduleCallDate, true);
       tasks.add(newTask);
     }
 

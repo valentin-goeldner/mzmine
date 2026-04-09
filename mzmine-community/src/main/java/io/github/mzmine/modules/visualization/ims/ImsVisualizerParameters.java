@@ -61,10 +61,9 @@ public class ImsVisualizerParameters extends SimpleParameterSet {
                   Range.closed(0.0, 100.0)),
               new PaintScale(PaintScaleColorStyle.YELLOW, PaintScaleBoundStyle.NONE,
                   Range.closed(0.0, 100.0))});
-  public static final WindowSettingsParameter windowSettings = new WindowSettingsParameter();
 
   public ImsVisualizerParameters() {
-    super(new Parameter[] {dataFiles, scanSelection, paintScale, mzRange, windowSettings});
+    super(new Parameter[] {dataFiles, scanSelection, paintScale, mzRange});
   }
 }
 */

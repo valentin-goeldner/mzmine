@@ -61,6 +61,7 @@ public class FeatureImageProvider<T extends ImagingScan> implements PlotXYZDataP
   private IonTimeSeries<T> series;
   private double width;
   private double height;
+  private boolean isComputed = false;
 
   public FeatureImageProvider(Feature feature) {
     this(feature, (List<T>) feature.getFeatureList().getSeletedScans(feature.getRawDataFile()),
@@ -146,6 +147,8 @@ public class FeatureImageProvider<T extends ImagingScan> implements PlotXYZDataP
         ImagingPlot.DEFAULT_IMAGING_QUANTILES);
     paintScale = MZmineCore.getConfiguration().getDefaultPaintScalePalette()
         .toPaintScale(PaintScaleTransform.LINEAR, Range.closed(quantiles[0], quantiles[1]));
+
+    isComputed = true;
   }
 
   @Override
@@ -188,5 +191,12 @@ public class FeatureImageProvider<T extends ImagingScan> implements PlotXYZDataP
   @Override
   public T getSpectrum(int index) {
     return series.getSpectrum(index);
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return isComputed;
   }
 }

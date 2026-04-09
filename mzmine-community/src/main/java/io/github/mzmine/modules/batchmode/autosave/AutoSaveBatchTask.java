@@ -44,7 +44,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert.AlertType;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.jetbrains.annotations.NotNull;
@@ -87,7 +86,7 @@ public class AutoSaveBatchTask extends AbstractSimpleTask {
 
     final BatchQueue queueCopy = batchTask.getQueueCopy();
 
-    final String mzbatch = ExtensionFilters.getExtensionName(ExtensionFilters.MZ_BATCH);
+    final String mzbatch = ExtensionFilters.getFirstCleanExtensionName(ExtensionFilters.MZ_BATCH);
 
     File savePath = parameters.getOptionalValue(AutoSaveBatchParameters.savePath).orElse(null);
     if (savePath == null || savePath.toString().isBlank()) {
@@ -120,8 +119,7 @@ public class AutoSaveBatchTask extends AbstractSimpleTask {
     logger.info("Saving batch to %s".formatted(savePath.getAbsolutePath()));
 
     try {
-      final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-          .newDocument();
+      final Document document = XMLUtils.newDocument();
       final Element element = document.createElement("batch");
       document.appendChild(element);
 

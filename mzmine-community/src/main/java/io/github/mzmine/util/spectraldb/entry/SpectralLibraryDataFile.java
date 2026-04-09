@@ -44,6 +44,9 @@ public class SpectralLibraryDataFile extends RawDataFileImpl {
   private final SpectralLibrary library;
 
   public SpectralLibraryDataFile(@NotNull SpectralLibrary library) {
+    // name used to be name with size - but this does not match to real raw data file names
+    // also this creates issues with the USI and {@link ScanUtil#extractScanIdString} that the size is in there
+    // just use library.getName() instead
     super(library.getName(), library.getPath().getAbsolutePath(), library.getStorage());
     this.library = library;
 

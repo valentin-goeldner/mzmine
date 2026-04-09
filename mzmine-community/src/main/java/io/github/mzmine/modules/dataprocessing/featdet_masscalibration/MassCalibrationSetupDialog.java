@@ -293,7 +293,10 @@ public class MassCalibrationSetupDialog extends ParameterSetupDialog {
 
     updateParameterSetFromComponents();
     if (debounce) {
-      debounceTime.setOnFinished(event -> loadPreview(true));
+      // use FxThread runlater to run on the fxthread. Otherwise we cannot call dialog.showAndWait.
+//    java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
+      // use Platform.runLater directly and not FxThread. Platform does extra checks
+      debounceTime.setOnFinished(_ -> Platform.runLater(() -> loadPreview(true)));
       debounceTime.playFromStart();
     } else {
       loadPreview(true);

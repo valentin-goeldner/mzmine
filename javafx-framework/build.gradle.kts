@@ -33,7 +33,7 @@ plugins {
 repositories {
     mavenCentral()
     // local libraries
-    maven { url = uri("file://" + layout.projectDirectory.dir("../local-repo")) }
+    maven { url = uri(layout.projectDirectory.dir("../local-repo/")) }
 }
 
 dependencies {

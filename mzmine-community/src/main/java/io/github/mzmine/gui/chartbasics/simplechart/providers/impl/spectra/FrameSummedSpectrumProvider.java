@@ -109,4 +109,11 @@ public class FrameSummedSpectrumProvider implements PlotXYDataProvider {
   public double getComputationFinishedPercentage() {
     return 1;
   }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return true;
+  }
 }

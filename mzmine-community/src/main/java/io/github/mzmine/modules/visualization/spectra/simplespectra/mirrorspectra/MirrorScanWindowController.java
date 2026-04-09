@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -204,7 +205,10 @@ public class MirrorScanWindowController implements FeatureRowInterfaceFx {
 
     //
     PauseTransition pause = new PauseTransition(Duration.seconds(1));
-    pause.setOnFinished(event -> loadSpectra());
+    // use FxThread runlater to run on the fxthread. Otherwise we cannot call dialog.showAndWait.
+//    java.lang.IllegalStateException: showAndWait is not allowed during animation or layout processing
+    // use Platform.runLater directly and not FxThread. Platform does extra checks
+    pause.setOnFinished(_ -> Platform.runLater(this::loadSpectra));
     txtTop.textProperty().addListener((observable, oldValue, newValue) -> pause.playFromStart());
     txtBottom.textProperty().addListener((observable, oldValue, newValue) -> pause.playFromStart());
 

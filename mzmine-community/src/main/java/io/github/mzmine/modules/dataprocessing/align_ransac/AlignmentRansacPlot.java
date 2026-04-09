@@ -24,6 +24,7 @@
  */
 package io.github.mzmine.modules.dataprocessing.align_ransac;
 
+import io.github.mzmine.gui.chartbasics.FxChartFactory;
 import io.github.mzmine.gui.chartbasics.gui.javafx.EChartViewer;
 import io.github.mzmine.gui.chartbasics.listener.ZoomHistory;
 import io.github.mzmine.main.MZmineCore;
@@ -41,7 +42,6 @@ import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math.optimization.fitting.PolynomialFitter;
 import org.apache.commons.math.optimization.general.GaussNewtonOptimizer;
 import org.apache.commons.math.stat.regression.SimpleRegression;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.block.BlockBorder;
@@ -65,8 +65,8 @@ public class AlignmentRansacPlot extends EChartViewer {
   // crosshair (selection) color
   private static final Color crossHairColor = Color.gray;
   // crosshair stroke
-  private static final BasicStroke crossHairStroke =
-      new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 1.0f, new float[] {5, 3}, 0);
+  private static final BasicStroke crossHairStroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_BEVEL, 1.0f, new float[]{5, 3}, 0);
   // data points shape
   private static final Shape dataPointsShape = new Ellipse2D.Double(-2, -2, 5, 5);
   // titles
@@ -82,7 +82,7 @@ public class AlignmentRansacPlot extends EChartViewer {
   private NumberFormat rtFormat = MZmineCore.getConfiguration().getRTFormat();
 
   public AlignmentRansacPlot() {
-    super(ChartFactory.createXYLineChart("", null, null, new XYSeriesCollection(),
+    super(FxChartFactory.createXYLineChart("", null, null, new XYSeriesCollection(),
         PlotOrientation.VERTICAL, true, true, false));
 
     chart = this.getChart();
@@ -136,8 +136,9 @@ public class AlignmentRansacPlot extends EChartViewer {
 
     // reset zoom history
     ZoomHistory history = getZoomHistory();
-    if (history != null)
+    if (history != null) {
       history.clear();
+    }
   }
 
   /**
@@ -150,7 +151,7 @@ public class AlignmentRansacPlot extends EChartViewer {
   /**
    * Add new series.
    *
-   * @param data Vector with the alignments
+   * @param data  Vector with the alignments
    * @param title Name of the feature lists in this alignment
    */
   public void addSeries(Vector<AlignStructMol> data, String title, boolean linear) {

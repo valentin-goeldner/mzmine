@@ -50,6 +50,9 @@ public class SpectraStackVisualizerParameters extends SimpleParameterSet {
       true);
 
 
+  /**
+   * this is a mouse movement crosshair
+   */
   public static final BooleanParameter showCrosshair = new BooleanParameter("Crosshair", "", true);
   public static final BooleanParameter showAllAxes = new BooleanParameter("All axes",
       "Show all or only bottom axis", false);

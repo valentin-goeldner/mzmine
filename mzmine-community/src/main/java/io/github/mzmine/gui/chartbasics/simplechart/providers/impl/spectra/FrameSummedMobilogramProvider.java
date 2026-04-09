@@ -57,6 +57,8 @@ public class FrameSummedMobilogramProvider implements PlotXYDataProvider {
   private double[] intensities;
 
   private double finishedPercentage;
+  private boolean isComputed = false;
+
 
   /**
    * @param binWidth Number of mobility scans to be accumulated for mobilogram generation.
@@ -146,5 +148,13 @@ public class FrameSummedMobilogramProvider implements PlotXYDataProvider {
       finishedPercentage = (double) i / numScans;
     }
     finishedPercentage = 1.0;
+    isComputed = true;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return isComputed;
   }
 }

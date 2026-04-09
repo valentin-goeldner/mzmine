@@ -82,6 +82,11 @@ public class IonTimeSeriesToXYProvider implements PlotXYDataProvider, ColorPrope
     this(series, seriesKey, new SimpleObjectProperty<>(color));
   }
 
+  public IonTimeSeriesToXYProvider(IonTimeSeries<Scan> series, String seriesKEy, Color colorAWT,
+      double normalizationFactor) {
+    this(series, seriesKEy, new SimpleObjectProperty<>(FxColorUtil.awtColorToFX(colorAWT)), normalizationFactor);
+  }
+
   @NotNull
   @Override
   public Color getAWTColor() {
@@ -148,5 +153,12 @@ public class IonTimeSeriesToXYProvider implements PlotXYDataProvider, ColorPrope
       return null;
     }
     return series.getSpectra().get(index);
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return true;
   }
 }

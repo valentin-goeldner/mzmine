@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 // top level json objects/arrays
@@ -56,8 +57,8 @@ public class MZmineFullJsonParser extends SpectralDBParser {
   }
 
   @Override
-  public boolean parse(@Nullable AbstractTask mainTask, File dataBaseFile,
-      @Nullable SpectralLibrary library) throws IOException {
+  public boolean parse(@Nullable AbstractTask mainTask, @NotNull File dataBaseFile,
+      @NotNull SpectralLibrary library) throws IOException {
     logger.info("Parsing GNPS spectral json library " + dataBaseFile.getAbsolutePath());
     int error = 0;
     ObjectMapper mapper = new ObjectMapper();

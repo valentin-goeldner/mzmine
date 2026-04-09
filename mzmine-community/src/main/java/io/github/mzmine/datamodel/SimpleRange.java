@@ -12,6 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -32,7 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Lightweight alternative to {@link Range} without cut values. Always a closed range.
+ * Lightweight alternative to {@link Range} without cut values, which bloat RAM usage drastically.
+ * Guava Range is a good option for computation tasks but never to keep in memory.
+ * {@link SimpleRange} is always a closed range.
  *
  * @param <T>
  */
@@ -44,9 +47,18 @@ public sealed interface SimpleRange<T extends Comparable<?>> permits SimpleInteg
 
   boolean contains(@NotNull T value);
 
+  boolean isConnected(@NotNull SimpleRange<T> other);
+
+  boolean isConnected(@NotNull Range<T> other);
+
   @NotNull T lowerBound();
 
   @NotNull T upperBound();
+
+  /**
+   * @return upper - lower
+   */
+  @NotNull T length();
 
   /**
    * Convenience method to convert a simple range to a guava range. Equivalent to
@@ -127,8 +139,35 @@ public sealed interface SimpleRange<T extends Comparable<?>> permits SimpleInteg
     }
 
     @Override
+    public @NotNull Integer length() {
+      return upper - lower;
+    }
+
+    @Override
     public boolean contains(@NotNull Integer value) {
       return lower <= value && value <= upper;
+    }
+
+    @Override
+    public boolean isConnected(@NotNull SimpleRange<Integer> other) {
+      if (contains(other.lowerBound()) || contains(other.upperBound())) {
+        // simple overlap
+        return true;
+      }
+      if (lower < other.lowerBound() && upper > other.upperBound()) {
+        // this range encloses the other range
+        return true;
+      }
+      if (other.lowerBound() < lower && other.upperBound() > upper) {
+        // other range encloses this range
+        return true;
+      }
+      return false;
+    }
+
+    @Override
+    public boolean isConnected(@NotNull Range<Integer> other) {
+      return new SimpleIntegerRange(other.lowerEndpoint(), other.upperEndpoint()).isConnected(this);
     }
 
     public boolean contains(int value) {
@@ -154,8 +193,35 @@ public sealed interface SimpleRange<T extends Comparable<?>> permits SimpleInteg
     }
 
     @Override
+    public @NotNull Double length() {
+      return upper - lower;
+    }
+
+    @Override
     public boolean contains(@NotNull Double value) {
       return lower <= value && value <= upper;
+    }
+
+    @Override
+    public boolean isConnected(@NotNull SimpleRange<Double> other) {
+      if (contains(other.lowerBound()) || contains(other.upperBound())) {
+        // simple overlap
+        return true;
+      }
+      if (lower < other.lowerBound() && upper > other.upperBound()) {
+        // this range encloses the other range
+        return true;
+      }
+      if (other.lowerBound() < lower && other.upperBound() > upper) {
+        // other range encloses this range
+        return true;
+      }
+      return false;
+    }
+
+    @Override
+    public boolean isConnected(@NotNull Range<Double> other) {
+      return new SimpleDoubleRange(other.lowerEndpoint(), other.upperEndpoint()).isConnected(this);
     }
 
     public boolean contains(double value) {

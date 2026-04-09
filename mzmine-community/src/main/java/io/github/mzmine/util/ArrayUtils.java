@@ -25,6 +25,7 @@
 
 package io.github.mzmine.util;
 
+import io.github.mzmine.datamodel.SimpleRange.SimpleDoubleRange;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -359,5 +360,34 @@ public class ArrayUtils {
   public static File[] combine(final @Nullable File[]... arrays) {
     return Arrays.stream(arrays).filter(Objects::nonNull).flatMap(Arrays::stream)
         .filter(Objects::nonNull).toArray(File[]::new);
+  }
+
+  public static Optional<SimpleDoubleRange> rangeOf(final double @Nullable [] data) {
+    if (data == null || data.length == 0) {
+      return Optional.empty();
+    }
+    double min = data[0];
+    double max = data[0];
+    for (int i = 1; i < data.length; i++) {
+      if (data[i] < min) {
+        min = data[i];
+      }
+      if (data[i] > max) {
+        max = data[i];
+      }
+    }
+    return Optional.of(new SimpleDoubleRange(min, max));
+  }
+
+  public static int indexOfMin(double[] values, int startSearchIndex, int endSearchIndexExclusive) {
+    double min = Double.POSITIVE_INFINITY;
+    int minIndex = startSearchIndex;
+    for (int i = startSearchIndex; i < endSearchIndexExclusive; i++) {
+      if(values[i] < min) {
+        min = values[i];
+        minIndex = i;
+      }
+    }
+    return minIndex;
   }
 }

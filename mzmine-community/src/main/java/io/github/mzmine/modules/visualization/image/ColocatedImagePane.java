@@ -79,8 +79,8 @@ public class ColocatedImagePane extends StackPane {
       @Nullable FeatureListRow selectedRow, @Nullable RawDataFile file) {
     super();
     this.getChildren().add(contentGrid);
-    contentGrid.setHgap(10);
-    contentGrid.setVgap(10);
+    contentGrid.setHgap(5);
+    contentGrid.setVgap(5);
     chartGroup = new ChartGroup(false, false, true, true);
     updateContent(sortedRelationships, selectedRow, file);
   }
@@ -146,6 +146,7 @@ public class ColocatedImagePane extends StackPane {
         MZmineCore.getConfiguration().getImageTransformation());
 
     var imagePlot = new ImagingPlot((ImageVisualizerParameters) params);
+    imagePlot.getChart().getXYPlot().setShowCursorCrosshair(false, false);
     imagePlot.setData(feature);
 
     EChartViewer chart = imagePlot.getChart();

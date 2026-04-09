@@ -25,12 +25,23 @@
 
 package io.github.mzmine.gui.chartbasics.simplechart.datasets;
 
+import io.github.mzmine.gui.chartbasics.gui.javafx.model.FxXYPlot;
 import io.github.mzmine.gui.chartbasics.simplechart.providers.PieXYZDataProvider;
 import io.github.mzmine.gui.chartbasics.simplechart.providers.PlotXYDataProvider;
 import io.github.mzmine.gui.chartbasics.simplechart.providers.PlotXYZDataProvider;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 
-public record DatasetAndRenderer(ColoredXYDataset dataset, XYItemRenderer renderer) {
+/**
+ * If possible use {@link XYDatasetAndRenderer} that is used more generally for {@link FxXYPlot}.
+ * This class uses specialized {@link ColoredXYDataset} and is not applicable to all XYPlot.
+ * <p>
+ * TODO need to rename this class to something more specific like ColoredXYDatasetAndRenderer and maybe move to be an inner class of {@link XYDatasetAndRenderer}
+ *
+ * @param dataset
+ * @param renderer
+ */
+public record DatasetAndRenderer(ColoredXYDataset dataset, XYItemRenderer renderer) implements
+    XYDatasetAndRenderer {
 
   public DatasetAndRenderer(PlotXYDataProvider provider, XYItemRenderer renderer) {
     this(getDataset(provider), renderer);

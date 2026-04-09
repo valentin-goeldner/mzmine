@@ -461,8 +461,8 @@ public class MSnTreeTab extends SimpleTab {
 
     // update chart
     for (var spectraPlot : spectraPlots) {
+      // triggers the chart update event internally
       spectraPlot.setNotifyChange(true);
-      spectraPlot.fireChangeEvent();
     }
   }
 

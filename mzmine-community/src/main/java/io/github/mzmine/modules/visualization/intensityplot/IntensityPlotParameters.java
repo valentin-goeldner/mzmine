@@ -31,7 +31,6 @@ import io.github.mzmine.datamodel.features.FeatureListRow;
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.impl.SimpleParameterSet;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;
-import io.github.mzmine.parameters.parametertypes.WindowSettingsParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureListsParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureSelectionParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
@@ -57,14 +56,9 @@ public class IntensityPlotParameters extends SimpleParameterSet {
 
   public static final FeatureSelectionParameter selectedRows = new FeatureSelectionParameter();
 
-  /**
-   * Windows size and position
-   */
-  public static final WindowSettingsParameter windowSettings = new WindowSettingsParameter();
 
   public IntensityPlotParameters() {
-    super(new Parameter[]{featureList, dataFiles, xAxisValueSource, yAxisValueSource, selectedRows,
-            windowSettings},
+    super(new Parameter[]{featureList, dataFiles, xAxisValueSource, yAxisValueSource, selectedRows},
         "https://mzmine.github.io/mzmine_documentation/visualization_modules/processed_additional/processed_additional.html#feature-intensity-plot");
   }
 

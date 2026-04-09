@@ -134,8 +134,9 @@ public class ImagingPlot extends BorderPane {
     final boolean lockOnAspectRatio = MZmineCore.getConfiguration()
         .getModuleParameters(FeatureTableFXModule.class)
         .getParameter(FeatureTableFXParameters.lockImagesToAspectRatio).getValue();
-    MZmineCore.getConfiguration().getDefaultChartTheme().apply(chart);
     chart.getXYPlot().setBackgroundPaint(Color.BLACK);
+
+    chart.setLegendVisible(true);
 
     setCenter(chart);
     return chart;

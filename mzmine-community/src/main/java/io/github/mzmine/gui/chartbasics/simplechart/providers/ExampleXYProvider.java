@@ -65,6 +65,7 @@ public class ExampleXYProvider implements PlotXYDataProvider {
   private final List<DataPoint> originalDatapoints;
 
   private double finishedPercentage;
+  private boolean isComputed = false;
 
 
   public ExampleXYProvider(List<DataPoint> originalDataPoints) {
@@ -136,10 +137,16 @@ public class ExampleXYProvider implements PlotXYDataProvider {
     }
 
     finishedPercentage = 1.d;
+    isComputed = true;
   }
 
   @Override
   public double getComputationFinishedPercentage() {
     return finishedPercentage;
+  }
+
+  @Override
+  public boolean isComputed() {
+    return isComputed;
   }
 }

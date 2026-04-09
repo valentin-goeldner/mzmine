@@ -34,9 +34,11 @@ dependencyResolutionManagement {
     }
 }
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-}
+//plugins {
+// this resolution should not be needed if we do not force a specific JDK
+// github actions already have their own jdk defined
+//    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+//}
 
 rootProject.name = "convention-plugins"
 

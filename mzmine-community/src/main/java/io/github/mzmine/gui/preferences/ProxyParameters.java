@@ -29,7 +29,7 @@ import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.impl.SimpleParameterSet;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
-import io.github.mzmine.util.web.Proxy;
+import io.github.mzmine.util.web.ProxyDefinition;
 import io.github.mzmine.util.web.ProxyType;
 import java.util.Map;
 
@@ -63,7 +63,7 @@ public class ProxyParameters extends SimpleParameterSet {
     return 2;
   }
 
-  public void setProxy(final Proxy proxy) {
+  public void setProxy(final ProxyDefinition proxy) {
     if (proxy.address() != null) {
       setParameter(proxyAddress, proxy.address());
     }

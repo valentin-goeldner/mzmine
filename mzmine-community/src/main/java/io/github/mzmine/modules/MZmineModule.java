@@ -25,6 +25,7 @@
 
 package io.github.mzmine.modules;
 
+import io.github.mzmine.datamodel.utils.UniqueIdSupplier;
 import io.github.mzmine.parameters.ParameterSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,15 +34,26 @@ import org.jetbrains.annotations.Nullable;
  * This interface represents any component of MZmine that has a ParameterSet, and therefore can
  * store its settings.
  */
-public interface MZmineModule {
+public interface MZmineModule extends UniqueIdSupplier {
 
   /**
    * Returns module name
-   * 
+   *
    * @return Module name
    */
   @NotNull
   public String getName();
+
+  /**
+   * Unique ID is used for loading and saving module-related information. This ID should never
+   * change.
+   *
+   * @return a unique ID that should never change
+   */
+  @NotNull
+  default String getUniqueID() {
+    return getClass().getSimpleName();
+  }
 
   /**
    * Returns module's parameter class. If the module has no parameters, it can return null. The

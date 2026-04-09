@@ -25,6 +25,7 @@
 
 package io.github.mzmine.modules.dataprocessing.id_lipidid.annotation_modules;
 
+import io.github.mzmine.gui.chartbasics.FxChartFactory;
 import io.github.mzmine.gui.chartbasics.chartutils.ColoredBubbleDatasetRenderer;
 import io.github.mzmine.gui.chartbasics.gui.javafx.EChartViewer;
 import io.github.mzmine.javafx.util.color.ColorsFX;
@@ -53,7 +54,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
@@ -168,11 +168,11 @@ public class LipidDatabaseTableController {
     lipidDatabaseTableView.setItems(tableData);
 
     // add plots
-    EChartViewer kendrickChartCH2 =
-        new EChartViewer(create2DKendrickMassDatabasePlot("CH2"), true, true, true, true, false);
+    EChartViewer kendrickChartCH2 = new EChartViewer(create2DKendrickMassDatabasePlot("CH2"), true,
+        true, true, true, false);
     kendrickPlotPanelCH2.setCenter(kendrickChartCH2);
-    EChartViewer kendrickChartH =
-        new EChartViewer(create2DKendrickMassDatabasePlot("H"), true, true, true, true, false);
+    EChartViewer kendrickChartH = new EChartViewer(create2DKendrickMassDatabasePlot("H"), true,
+        true, true, true, false);
     kendrickPlotPanelH.setCenter(kendrickChartH);
 
     // legend
@@ -232,7 +232,7 @@ public class LipidDatabaseTableController {
     }
 
     // create chart
-    JFreeChart chart = ChartFactory.createScatterPlot("Database plot KMD base " + base, "m/z",
+    JFreeChart chart = FxChartFactory.createScatterPlot("Database plot KMD base " + base, "m/z",
         "KMD (" + base + ")", null, PlotOrientation.VERTICAL, false, true, false);
     KendrickMassPlotXYDataset noInterferenceDataset = new KendrickMassPlotXYDataset(
         noInterferenceDps.stream().mapToDouble(DataPointXYZ::getX).toArray(),

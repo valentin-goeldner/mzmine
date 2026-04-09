@@ -94,7 +94,7 @@ public class SingleMobilityScanProvider implements PlotXYDataProvider {
 
   @Override
   public void computeValues(Property<TaskStatus> status) {
-    finishedPercentage = 1.d;
+    // nothing to do
   }
 
   @Override
@@ -115,5 +115,12 @@ public class SingleMobilityScanProvider implements PlotXYDataProvider {
   @Override
   public double getComputationFinishedPercentage() {
     return finishedPercentage;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return true;
   }
 }

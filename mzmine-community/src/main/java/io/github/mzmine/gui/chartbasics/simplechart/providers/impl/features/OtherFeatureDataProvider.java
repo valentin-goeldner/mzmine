@@ -106,6 +106,14 @@ public class OtherFeatureDataProvider implements PlotXYDataProvider {
     // nothing to do
   }
 
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  @Override
+  public boolean isComputed() {
+    return true;
+  }
+
   @Override
   public double getDomainValue(int index) {
     return feature.getFeatureData().getRetentionTime(index);

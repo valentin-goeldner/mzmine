@@ -158,4 +158,7 @@ public class MZRangeComponent extends DoubleRangeComponent {
     super.setAlignment(Pos.BASELINE_LEFT);
   }
 
+  public Button getSetAutoButton() {
+    return setAutoButton;
+  }
 }

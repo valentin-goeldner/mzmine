@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2025 The mzmine Development Team
+ * Copyright (c) 2004-2022 The MZmine Development Team
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -25,12 +25,16 @@
 
 package io.github.mzmine.datamodel;
 
-import io.github.mzmine.javafx.util.color.Vision;
-import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.datamodel.utils.UniqueIdSupplier;
+import io.github.mzmine.main.ConfigService;
+import io.github.mzmine.project.ProjectService;
 import io.github.mzmine.util.color.SimpleColorPalette;
 import java.awt.Color;
+import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.javafx.util.color.Vision;
+import org.jetbrains.annotations.NotNull;
 
-public enum FeatureStatus {
+public enum FeatureStatus implements UniqueIdSupplier {
 
   /**
    * Peak was not found
@@ -54,8 +58,9 @@ public enum FeatureStatus {
 
   public Color getColor() {
     SimpleColorPalette palette =
-        (MZmineCore.getConfiguration().getDefaultColorPalette() != null) ? MZmineCore.getConfiguration()
-            .getDefaultColorPalette() : SimpleColorPalette.DEFAULT.get(Vision.DEUTERANOPIA);
+        (ConfigService.getDefaultColorPalette() != null) ? ConfigService.getDefaultColorPalette()
+            : SimpleColorPalette.DEFAULT.get(Vision.DEUTERANOPIA);
+
     switch (this) {
       case DETECTED:
         return palette.getPositiveColorAWT();
@@ -71,8 +76,8 @@ public enum FeatureStatus {
 
   public javafx.scene.paint.Color getColorFX() {
     SimpleColorPalette palette =
-        (MZmineCore.getConfiguration().getDefaultColorPalette() != null) ? MZmineCore.getConfiguration()
-            .getDefaultColorPalette() : SimpleColorPalette.DEFAULT.get(Vision.DEUTERANOPIA);
+        (ConfigService.getDefaultColorPalette() != null) ? ConfigService.getDefaultColorPalette()
+            : SimpleColorPalette.DEFAULT.get(Vision.DEUTERANOPIA);
 
     switch (this) {
       case DETECTED:
@@ -85,5 +90,15 @@ public enum FeatureStatus {
       default:
         return palette.getNegativeColor();
     }
+  }
+
+  @Override
+  public @NotNull String getUniqueID() {
+    return switch (this) {
+      case DETECTED -> "DETECTED";
+      case ESTIMATED -> "ESTIMATED";
+      case MANUAL -> "MANUAL";
+      case UNKNOWN -> "UNKNOWN";
+    };
   }
 }

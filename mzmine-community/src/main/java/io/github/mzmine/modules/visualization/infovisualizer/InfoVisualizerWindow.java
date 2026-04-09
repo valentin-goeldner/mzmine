@@ -31,8 +31,6 @@ import io.github.mzmine.datamodel.features.FeatureList;
 import io.github.mzmine.datamodel.features.FeatureList.FeatureListAppliedMethod;
 import io.github.mzmine.datamodel.features.FeatureListRow;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.parameters.parametertypes.WindowSettingsParameter;
 import io.github.mzmine.util.javafx.WindowsMenu;
 import java.text.NumberFormat;
 import javafx.collections.FXCollections;
@@ -84,8 +82,8 @@ class InfoVisualizerWindow extends Stage {
 
     // Raw data file list
     label = new Label("List of raw data files");
-    ListView<RawDataFile> rawDataFileList =
-        new ListView<RawDataFile>(FXCollections.observableArrayList(featureList.getRawDataFiles()));
+    ListView<RawDataFile> rawDataFileList = new ListView<RawDataFile>(
+        FXCollections.observableArrayList(featureList.getRawDataFiles()));
     // rawDataFileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     // rawDataFileList.setLayoutOrientation(JList.VERTICAL);
     label.setLabelFor(rawDataFileList);
@@ -97,12 +95,10 @@ class InfoVisualizerWindow extends Stage {
     // rawPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
     // Applied methods list
-    ListView<FeatureListAppliedMethod> appliedMethodList =
-        new ListView<>(FXCollections.observableArrayList(featureList.getAppliedMethods()));
+    ListView<FeatureListAppliedMethod> appliedMethodList = new ListView<>(
+        FXCollections.observableArrayList(featureList.getAppliedMethods()));
     // appliedMethodList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     // appliedMethodList.setLayoutOrientation(JList.VERTICAL);
-
-
 
     // JLabel label = new JLabel("List of applied methods");
     // label.setLabelFor(processInfoList);
@@ -118,7 +114,6 @@ class InfoVisualizerWindow extends Stage {
     mainPane.add(label, 0, row);
     mainPane.add(value, 1, row);
 
-
     label = new Label("Created (yyyy/MM/dd HH:mm:ss):");
     value = new Label(String.valueOf((featureList).getDateCreated()));
     row++;
@@ -132,15 +127,15 @@ class InfoVisualizerWindow extends Stage {
     mainPane.add(value, 1, row);
 
     label = new Label("m/z range:");
-    value = new Label(mzFormat.format(mzRange.lowerEndpoint()) + " - "
-        + mzFormat.format(mzRange.upperEndpoint()));
+    value = new Label(mzFormat.format(mzRange.lowerEndpoint()) + " - " + mzFormat.format(
+        mzRange.upperEndpoint()));
     row++;
     mainPane.add(label, 0, row);
     mainPane.add(value, 1, row);
 
     label = new Label("RT range:");
-    value = new Label(rtFormat.format(rtRange.lowerEndpoint()) + " - "
-        + rtFormat.format(rtRange.upperEndpoint()));
+    value = new Label(rtFormat.format(rtRange.lowerEndpoint()) + " - " + rtFormat.format(
+        rtRange.upperEndpoint()));
     row++;
     mainPane.add(label, 0, row);
     mainPane.add(value, 1, row);
@@ -158,16 +153,6 @@ class InfoVisualizerWindow extends Stage {
     WindowsMenu.addWindowsMenu(mainScene);
 
     // pack();
-
-    // get the window settings parameter
-    ParameterSet paramSet =
-        MZmineCore.getConfiguration().getModuleParameters(InfoVisualizerModule.class);
-    WindowSettingsParameter settings =
-        paramSet.getParameter(InfoVisualizerParameters.windowSettings);
-
-    // update the window and listen for changes
-    // settings.applySettingsToWindow(this);
-    // this.addComponentListener(settings);
 
   }
 
@@ -187,8 +172,9 @@ class InfoVisualizerWindow extends Stage {
     mzRange = peakList.getRowsMZRange();
     rtRange = peakList.getRowsRTRange();
     for (FeatureListRow row : rows) {
-      if (row.getPreferredFeatureIdentity() != null)
+      if (row.getPreferredFeatureIdentity() != null) {
         numOfIdentities++;
+      }
     }
 
   }

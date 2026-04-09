@@ -46,7 +46,7 @@ public class SpectralLibrarySelectionException extends IllegalArgumentException 
 
   public static SpectralLibrarySelectionException forEmptyLibraries(
       final List<SpectralLibrary> libraries) {
-    var librariesJoined = libraries.stream().map(SpectralLibrary::getName)
+    var librariesJoined = libraries.stream().map(SpectralLibrary::getNameWithSize)
         .collect(Collectors.joining(", "));
     return new SpectralLibrarySelectionException("""
         Spectral library matching but libraries are empty. This might indicate that the imported library files \

@@ -65,6 +65,7 @@ public class MobilityScanMobilogramProvider implements PlotXYDataProvider {
   private int processed = 0;
   private int totalFrames = 1;
   private SummedIntensityMobilitySeries data;
+  private boolean isComputed = false;
 
   /**
    * Creates a mobilogram from the mobility scans.
@@ -157,6 +158,7 @@ public class MobilityScanMobilogramProvider implements PlotXYDataProvider {
     if (normalize) {
       data = IonMobilityUtils.normalizeMobilogram(data, null);
     }
+    isComputed = true;
   }
 
   @Override
@@ -177,5 +179,12 @@ public class MobilityScanMobilogramProvider implements PlotXYDataProvider {
   @Override
   public double getComputationFinishedPercentage() {
     return processed / (double) totalFrames;
+  }
+
+  /**
+   * @return true if computed. Providers that are precomputed may use true always
+   */
+  public boolean isComputed() {
+    return isComputed;
   }
 }

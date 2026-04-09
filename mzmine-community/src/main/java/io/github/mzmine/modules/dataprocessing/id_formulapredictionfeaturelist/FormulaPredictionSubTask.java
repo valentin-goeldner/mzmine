@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2025 The mzmine Development Team
+ * Copyright (c) 2004-2026 The mzmine Development Team
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -66,7 +66,7 @@ import org.openscience.cdk.interfaces.IChemObjectBuilder;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 
-class FormulaPredictionSubTask extends AbstractTask {
+public class FormulaPredictionSubTask extends AbstractTask {
 
   private static final Logger logger = Logger.getLogger(FormulaPredictionSubTask.class.getName());
 
@@ -103,7 +103,7 @@ class FormulaPredictionSubTask extends AbstractTask {
   /**
    * @param parameters
    */
-  FormulaPredictionSubTask(ParameterSet parameters, @NotNull Instant moduleCallDate,
+  public FormulaPredictionSubTask(ParameterSet parameters, @NotNull Instant moduleCallDate,
       ConcurrentLinkedQueue<FeatureListRow> rows) {
     super(null, moduleCallDate); // no new data stored -> null
 
@@ -209,7 +209,7 @@ class FormulaPredictionSubTask extends AbstractTask {
 
       List<ResultFormula> resultingFormulas = new ArrayList<>();
       final double rowMz = row.getAverageMZ();
-      if(rowMz > highMassLimit) {
+      if (rowMz > highMassLimit) {
         continue;
       }
 

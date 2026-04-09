@@ -53,7 +53,7 @@ import io.github.mzmine.modules.dataprocessing.id_formulaprediction.ResultFormul
 import io.github.mzmine.modules.dataprocessing.id_formulaprediction.restrictions.elements.ElementalHeuristicParameters;
 import io.github.mzmine.modules.dataprocessing.id_formulaprediction.restrictions.rdbe.RDBERestrictionParameters;
 import io.github.mzmine.modules.dataprocessing.id_formulapredictionfeaturelist.FormulaPredictionFeatureListParameters;
-import io.github.mzmine.modules.dataprocessing.id_formulapredictionfeaturelist.FormulaPredictionFeatureListTask;
+import io.github.mzmine.modules.dataprocessing.id_formulapredictionfeaturelist.FormulaPredictionSubTask;
 import io.github.mzmine.modules.tools.isotopepatternscore.IsotopePatternScoreParameters;
 import io.github.mzmine.modules.tools.msmsscore.MSMSScoreParameters;
 import io.github.mzmine.parameters.ParameterSet;
@@ -67,6 +67,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -83,7 +84,6 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
   private static final Logger logger = Logger.getLogger(PostColumnReactionTask.class.getName());
   private final FeatureList flist;
   private final String description;
-  private final Map<String, Integer> annotationCounts = new HashMap<>();
   private final List<RawDataFile> unreactedRaws;
   private final double corrThreshold;
   private final boolean checkFormulaPred;
@@ -164,6 +164,9 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
   protected void process() {
     setStatus(TaskStatus.PROCESSING);
 
+    // Map for tracking already used annotations.
+    final Map<String, Integer> annotationCounts = new HashMap<>();
+
     //Check if all unreacted reference files are contained in the feature list
     if (!checkUnreactedSelection(flist, unreactedRaws)) {
       setErrorMessage("Feature list " + flist.getName()
@@ -230,7 +233,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
         }
       });
 
-      annotateUnannotatedFeatures(correlatedRows, annotatedRow);
+      annotateUnannotatedFeatures(correlatedRows, annotatedRow, annotationCounts);
     }
 
     setStatus(TaskStatus.FINISHED);
@@ -238,7 +241,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
 
   // Annotate correlated rows based on the preferred annotation of the base row.
   private void annotateUnannotatedFeatures(List<FeatureListRow> correlatedRows,
-      FeatureListRow baseRow) {
+      FeatureListRow baseRow, Map<String, Integer> annotationCounts) {
 
     // If automated prediction of molecular formulae for transformation products is selected, their formula is predicted based on the base row.
     if (this.checkFormulaPred) {
@@ -261,8 +264,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
           String tpAnnotation;
 
           if (count > 0) {
-            char suffix = (char) ('a' + count);
-            tpAnnotation = baseTpAnnotation + suffix;
+            tpAnnotation = baseTpAnnotation + (count < 26 ? (char) ('a' + count) : "_" + count);
           } else {
             tpAnnotation = baseTpAnnotation;
           }
@@ -277,9 +279,12 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
           correlatedRow.addCompoundAnnotation(annotation);
 
           // Add formula for correlated row if present.
-          if (correlatedRow.getFormulas() != null && !correlatedRow.getFormulas().isEmpty()) {
-            ResultFormula correlatedFormula = correlatedRow.getFormulas().getFirst();
-            annotation.setFormula(correlatedFormula.toString());
+          List<ResultFormula> formulas = correlatedRow.getFormulas();
+          if (formulas != null && !formulas.isEmpty()) {
+            ResultFormula correlatedFormula = formulas.getFirst();
+            if (correlatedFormula != null) {
+              annotation.setFormula(correlatedFormula.toString());
+            }
           }
         }
       }
@@ -289,16 +294,25 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
   // Predict molecular formula of the correlated row based on the annotated formula of the base row.
   public void predictCorrelatedFormula(List<FeatureListRow> correlatedRows,
       FeatureListRow baseRow) {
-
     try {
+      List<CompoundDBAnnotation> baseRowAnnotations = baseRow.getCompoundAnnotations();
+
+      if (baseRowAnnotations.isEmpty()) {
+        logger.log(Level.WARNING, "Base row {0} has no annotations; skipping formula prediction.",
+            baseRow.getID());
+        return;
+      }
+
+      // Ensure the formula string itself isn't null
+      String baseFormulaString = baseRowAnnotations.getFirst().getFormula();
+      if (baseFormulaString == null || baseFormulaString.isBlank()) {
+        return;
+      }
+
       // Extract the baseRow's molecular formula and convert it to an IMolecularFormula
       MolecularFormulaRange molecularFormulaRange = new MolecularFormulaRange();
-      List<CompoundDBAnnotation> baseRowCompoundAnnotations = baseRow.getCompoundAnnotations();
-      String baseFomrulaString;
-      baseFomrulaString = baseRowCompoundAnnotations.getFirst().getFormula();
-      assert baseFomrulaString != null;
       IMolecularFormula baseFormula = MolecularFormulaManipulator.getMolecularFormula(
-          baseFomrulaString, DefaultChemObjectBuilder.getInstance());
+          baseFormulaString, DefaultChemObjectBuilder.getInstance());
 
       Iterable<IIsotope> isotopes = baseFormula.isotopes();
       IsotopeFactory iFac = Isotopes.getInstance();
@@ -325,40 +339,29 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
         this.predParamSet.getParameter(elements).setValue(molecularFormulaRange);
       }
 
+      // Convert correlatedRows to ConcurrentLinkedQueue for sumbission to FormulaPredictionFeatureListTask.
+      ConcurrentLinkedQueue<FeatureListRow> corrRows = new ConcurrentLinkedQueue<>(correlatedRows);
+
       // Create a task for molecular formula prediction and execute it.
-      FormulaPredictionFeatureListTask newTask = new FormulaPredictionFeatureListTask(null,
-          correlatedRows, this.predParamSet, Instant.now());
+      FormulaPredictionSubTask newTask = new FormulaPredictionSubTask(this.predParamSet,
+          Instant.now(), corrRows);
       newTask.run();
     } catch (Exception e) {
-      logger.severe("Error predicting molecular formula: " + e.getMessage());
+      logger.log(Level.SEVERE, "Error predicting molecular formula for row " + baseRow.getID(), e);
     }
   }
 
   // Check whether the feature list to be processed contains all raw data files declared as unreacted.
   private boolean checkUnreactedSelection(FeatureList aligned, List<RawDataFile> unreactedRaws) {
-
     List<RawDataFile> flRaws = aligned.getRawDataFiles();
 
-    for (int i = 0; i < unreactedRaws.size(); i++) {
-      boolean contained = false;
-
-      for (RawDataFile flRaw : flRaws) {
-        if (unreactedRaws.get(i) == flRaw) {
-          contained = true;
-          break;
-        }
-      }
-
-      if (!contained) {
-        final int i1 = i;
-        logger.info(() -> "Feature list " + aligned.getName() + " does not contain raw data files "
-            + unreactedRaws.get(i1).getName());
+    for (RawDataFile unreacted : unreactedRaws) {
+      if (!flRaws.contains(unreacted)) {
+        logger.info(() -> "Feature list " + aligned.getName() + " does not contain raw data file "
+            + unreacted.getName());
         return false;
       }
     }
-
-    logger.finest(
-        () -> "Feature list " + aligned.getName() + " contains all selected blank raw data files.");
     return true;
   }
 }

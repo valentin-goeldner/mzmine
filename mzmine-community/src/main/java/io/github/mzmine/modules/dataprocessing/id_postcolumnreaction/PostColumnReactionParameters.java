@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2025 The mzmine Development Team
+ * Copyright (c) 2004-2026 The mzmine Development Team
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -25,12 +25,16 @@
 
 package io.github.mzmine.modules.dataprocessing.id_postcolumnreaction;
 
+import io.github.mzmine.javafx.components.factories.FxTextFlows;
+import io.github.mzmine.javafx.components.factories.FxTexts;
 import io.github.mzmine.parameters.impl.SimpleParameterSet;
 import io.github.mzmine.parameters.parametertypes.OptionalParameter;
 import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureListsParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 import io.github.mzmine.parameters.parametertypes.submodules.OptionalModuleParameter;
+import javafx.scene.layout.Region;
+import org.jetbrains.annotations.Nullable;
 
 public class PostColumnReactionParameters extends SimpleParameterSet {
 
@@ -51,6 +55,11 @@ public class PostColumnReactionParameters extends SimpleParameterSet {
           "Set a correlation score at which features are considered for transformation product annotation in %",
           0.4), true);
 
+  @Override
+  public @Nullable Region getMessage() {
+    return FxTextFlows.newTextFlowInAccordion("Information", true, FxTexts.text(
+        "Annotates transformation products formed by post column reaction. Please run metaCorrelate first. Features are considered transformation products when grouped with an annotated feature. Transformation products are annotated with the compound name of the parent compound + '_ETP_' + nominal m/z. Optionally molecular formulae are predicted for transformation products based on the parent's formula."));
+  }
 
   public PostColumnReactionParameters() {
     super(flist, unreactedRawDataFiles, formulaPredictionParameters, correlationThreshold);

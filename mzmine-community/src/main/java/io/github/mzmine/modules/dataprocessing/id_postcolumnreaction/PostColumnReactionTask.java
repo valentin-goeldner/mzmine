@@ -128,6 +128,14 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
       MSMSScoreParameters msmsParams = predParams.getParameter(predMsmsFilter)
           .getEmbeddedParameters();
 
+      /*
+       * The formula prediction for ETPs reuses the generic FormulaPredictionSubTask.
+       * To configure it, we create a new FormulaPredictionFeatureListParameters instance
+       * and populate it with the settings defined in our module-specific
+       * PostColumnReactionFormulaPredictionParameters. This decouples our module from the
+       * generic prediction task's parameters.
+       */
+
       this.predParamSet = new FormulaPredictionFeatureListParameters();
       this.predParamSet.getParameter(ionization).setValue(predParams.getValue(predIonization));
       this.predParamSet.getParameter(mzTolerance).setValue(predParams.getValue(predMZTolerance));
@@ -259,6 +267,8 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
           String roundedMz = String.valueOf(Math.round(correlatedRow.getAverageMZ()));
           String baseTpAnnotation = baseAnnotation + "_ETP_" + roundedMz;
 
+          // To handle multiple ETPs with the same parent and nominal m/z (e.g. isobars), a letter suffix ('b', 'c', ...) is appended if required. This ensures a unique name for each new ETP.
+
           // Get the current count for this base annotation.
           int count = annotationCounts.getOrDefault(baseTpAnnotation, 0);
           String tpAnnotation;
@@ -319,7 +329,7 @@ public class PostColumnReactionTask extends AbstractFeatureListTask {
       IIsotope oxygenIsotope = iFac.getMajorIsotope("O");
 
       // Set the range for predicting the molecular formula of the correlated row based on the molecular formula of the base row.
-      // Add the possibility for 8 additional Oxygen and Hydrogen atoms.
+      // Add the possibility for 8 additional Oxygen and Hydrogen atoms to accommodate common redox transformations.
       for (IIsotope i : isotopes) {
         IIsotope majorIsotope = iFac.getMajorIsotope(i.getSymbol());
         int baseIsotopeCount = baseFormula.getIsotopeCount(i);

@@ -58,7 +58,11 @@ public class PostColumnReactionParameters extends SimpleParameterSet {
   @Override
   public @Nullable Region getMessage() {
     return FxTextFlows.newTextFlowInAccordion("Information", true, FxTexts.text(
-        "Annotates transformation products formed by post column reaction. Please run metaCorrelate first. Features are considered transformation products when grouped with an annotated feature. Transformation products are annotated with the compound name of the parent compound + '_ETP_' + nominal m/z. Optionally molecular formulae are predicted for transformation products based on the parent's formula."));
+        "This module identifies and annotates transformation products (ETPs) from post-column reactions. "
+            + "It requires correlation grouping (metaCorrelate) to have been run first. "
+            + "For each annotated compound, it searches for correlated features that are absent in unreacted control samples. "
+            + "These ETPs are then annotated with a name derived from the parent (e.g., ParentName_ETP_123) "
+            + "and can optionally have their molecular formula predicted."));
   }
 
   public PostColumnReactionParameters() {
